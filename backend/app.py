@@ -1,6 +1,6 @@
 from flask import Flask, request
 from flask_cors import CORS
-
+from busca import busca_por_nome
 from database import criar_tabelas, conectar
 
 app = Flask(__name__)
@@ -73,3 +73,32 @@ def listar_alunos():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+@app.route("/alunos/busca/<nome>")
+def buscar_aluno(nome):
+
+    conn = conectar()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT matricula, nome, curso
+        FROM alunos
+    """)
+
+    dados = cursor.fetchall()
+
+    conn.close()
+
+    alunos = []
+
+    for aluno in dados:
+
+        alunos.append({
+            "matricula": aluno[0],
+            "nome": aluno[1],
+            "curso": aluno[2]
+        })
+
+    resultado = busca_por_nome(alunos, nome)
+
+    return resultado

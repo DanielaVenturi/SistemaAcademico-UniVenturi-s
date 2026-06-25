@@ -1,12 +1,11 @@
-def busca_linear(alunos, termo):
+def busca_por_nome(lista_alunos, nome_procurado):
 
-    for aluno in alunos:
+    resultado = []
 
-        if (
-            str(aluno["matricula"]) == str(termo)
-            or
-            aluno["nome"].lower() == termo.lower()
-        ):
-            return aluno
+    for aluno in lista_alunos:
 
-    return None
+        if nome_procurado.lower() in aluno["nome"].lower():
+
+            resultado.append(aluno)
+
+    return resultado
