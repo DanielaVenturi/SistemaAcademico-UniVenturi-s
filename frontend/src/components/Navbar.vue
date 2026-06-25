@@ -1,23 +1,17 @@
 <template>
-  <nav>
+  <nav class="navbar">
 
     <router-link to="/">
       🏠 Início
     </router-link>
 
-    |
-
     <router-link to="/cadastros">
       📝 Cadastros
     </router-link>
 
-    |
-
     <router-link to="/consultas">
       🔎 Consultas
     </router-link>
-
-    |
 
     <router-link to="/notas">
       📊 Notas
@@ -27,12 +21,24 @@
 </template>
 
 <style scoped>
-nav{
-  padding:20px;
+
+.navbar{
+  background:#1e293b;
+  padding:15px;
+
+  display:flex;
+  justify-content:center;
+  gap:20px;
 }
 
 a{
-  margin:10px;
+  color:white;
   text-decoration:none;
+  font-weight:bold;
 }
+
+.router-link-active{
+  color:#38bdf8;
+}
+
 </style>

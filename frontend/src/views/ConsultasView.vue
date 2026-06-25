@@ -1,27 +1,53 @@
 <template>
 
-  <h1>🔎 Consultas</h1>
+  <div class="container">
 
-  <input
-    placeholder="Buscar aluno..."
-  >
+    <h1>🔎 Consultas</h1>
 
-  <button>
-    Buscar
-  </button>
+    <input
+      placeholder="Buscar aluno..."
+    />
 
-  <hr>
+    <button>
+      Buscar
+    </button>
 
-  <button>
-    Ordenar por Nome
-  </button>
+    <hr>
 
-  <button>
-    Ordenar por Matrícula
-  </button>
+    <h2>
+      Ordenação
+    </h2>
 
-  <button>
-    Ordenar por Curso
-  </button>
+    <button>
+      Nome
+    </button>
+
+    <button>
+      Matrícula
+    </button>
+
+    <button>
+      Curso
+    </button>
+
+  </div>
 
 </template>
+
+<style scoped>
+
+.container{
+  padding:30px;
+}
+
+input{
+  padding:10px;
+  width:300px;
+}
+
+button{
+  padding:10px;
+  margin-left:10px;
+}
+
+</style>
