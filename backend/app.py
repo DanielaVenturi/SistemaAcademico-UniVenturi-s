@@ -19,6 +19,44 @@ def home():
     return {"mensagem": "Sistema Acadêmico Online"}
 
 
+@app.route("/cursos", methods=["POST"])
+def cadastrar_curso():
+
+    dados = request.json
+
+    conn = conectar()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        INSERT INTO cursos (nome)
+        VALUES (?)
+    """, (dados["nome"],))
+
+    conn.commit()
+    conn.close()
+
+    return {"mensagem": "Curso cadastrado com sucesso"}
+
+@app.route("/cursos", methods=["GET"])
+def listar_cursos():
+
+    conn = conectar()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT id, nome FROM cursos")
+    dados = cursor.fetchall()
+    conn.close()
+
+    cursos = []
+
+    for c in dados:
+        cursos.append({
+            "id": c[0],
+            "nome": c[1]
+        })
+
+    return cursos
+
 @app.route("/alunos", methods=["POST"])
 def cadastrar_aluno():
 
@@ -28,12 +66,12 @@ def cadastrar_aluno():
     cursor = conn.cursor()
 
     cursor.execute("""
-        INSERT INTO alunos (matricula, nome, curso)
+        INSERT INTO alunos (matricula, nome, curso_id)
         VALUES (?, ?, ?)
     """, (
         dados["matricula"],
         dados["nome"],
-        dados["curso"]
+        dados["curso_id"]
     ))
 
     conn.commit()
@@ -48,16 +86,65 @@ def listar_alunos():
     conn = conectar()
     cursor = conn.cursor()
 
-    cursor.execute("SELECT matricula, nome, curso FROM alunos")
+    cursor.execute("""
+        SELECT a.matricula, a.nome, c.nome
+        FROM alunos a
+        LEFT JOIN cursos c ON a.curso_id = c.id
+    """)
+
     dados = cursor.fetchall()
     conn.close()
 
-    alunos = [
-        {"matricula": a[0], "nome": a[1], "curso": a[2]}
-        for a in dados
-    ]
+    alunos = []
+
+    for a in dados:
+        alunos.append({
+            "matricula": a[0],
+            "nome": a[1],
+            "curso": a[2]
+        })
 
     return alunos
+
+@app.route("/alunos/<int:matricula>", methods=["PUT"])
+def atualizar_aluno(matricula):
+
+    dados = request.json
+
+    conn = conectar()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        UPDATE alunos
+        SET nome = ?, curso_id = ?
+        WHERE matricula = ?
+    """, (
+        dados["nome"],
+        dados["curso_id"],
+        matricula
+    ))
+
+    conn.commit()
+    conn.close()
+
+    return {"mensagem": "Aluno atualizado com sucesso"}
+
+
+@app.route("/alunos/<int:matricula>", methods=["DELETE"])
+def deletar_aluno(matricula):
+
+    conn = conectar()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        DELETE FROM alunos
+        WHERE matricula = ?
+    """, (matricula,))
+
+    conn.commit()
+    conn.close()
+
+    return {"mensagem": "Aluno deletado com sucesso"}
 
 
 @app.route("/alunos/busca/<nome>")
@@ -171,6 +258,46 @@ def listar_notas():
         })
 
     return notas
+
+@app.route("/notas/<int:id>", methods=["PUT"])
+def atualizar_nota(id):
+
+    dados = request.json
+
+    conn = conectar()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        UPDATE notas
+        SET nota1 = ?, nota2 = ?, nota3 = ?
+        WHERE id = ?
+    """, (
+        dados["nota1"],
+        dados["nota2"],
+        dados["nota3"],
+        id
+    ))
+
+    conn.commit()
+    conn.close()
+
+    return {"mensagem": "Nota atualizada com sucesso"}
+
+@app.route("/notas/<int:id>", methods=["DELETE"])
+def deletar_nota(id):
+
+    conn = conectar()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        DELETE FROM notas
+        WHERE id = ?
+    """, (id,))
+
+    conn.commit()
+    conn.close()
+
+    return {"mensagem": "Nota deletada com sucesso"}
 
 
 @app.route("/notas/aluno/<int:matricula>")

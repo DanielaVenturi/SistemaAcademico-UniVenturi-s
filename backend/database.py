@@ -10,10 +10,18 @@ def criar_tabelas():
     cursor = conn.cursor()
 
     cursor.execute("""
+        CREATE TABLE IF NOT EXISTS cursos(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nome TEXT NOT NULL UNIQUE
+        )
+    """)
+
+    cursor.execute("""
         CREATE TABLE IF NOT EXISTS alunos(
             matricula INTEGER PRIMARY KEY,
             nome TEXT NOT NULL,
-            curso TEXT NOT NULL
+            curso_id INTEGER,
+            FOREIGN KEY(curso_id) REFERENCES cursos(id)
         )
     """)
 
