@@ -7,7 +7,11 @@ from busca import (
     busca_por_matricula,
     busca_por_curso
 )
-from ordenacao import ordenar_por_nome, ordenar_por_matricula
+from ordenacao import (
+    ordenar_por_nome,
+    ordenar_por_matricula,
+    ordenar_por_curso
+)
 from relatorios import calcular_media
 
 app = Flask(__name__)
@@ -319,6 +323,34 @@ def alunos_ordenados_matricula():
         })
 
     return ordenar_por_matricula(alunos)
+
+@app.route("/alunos/ordenados/curso")
+def alunos_ordenados_curso():
+
+    conn = conectar()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT a.matricula, a.nome, c.nome
+        FROM alunos a
+        LEFT JOIN cursos c
+        ON a.curso_id = c.id
+    """)
+
+    dados = cursor.fetchall()
+
+    conn.close()
+
+    alunos = []
+
+    for a in dados:
+        alunos.append({
+            "matricula": a[0],
+            "nome": a[1],
+            "curso": a[2]
+        })
+
+    return ordenar_por_curso(alunos)
 
 @app.route("/notas", methods=["POST"])
 def cadastrar_notas():
