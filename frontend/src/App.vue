@@ -1,7 +1,3 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <HelloWorld />
+  <h1>Sistema Acadêmico</h1>
 </template>
