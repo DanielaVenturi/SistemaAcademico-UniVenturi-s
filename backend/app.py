@@ -79,6 +79,24 @@ def cadastrar_aluno():
 
     return {"mensagem": "Aluno cadastrado com sucesso"}
 
+@app.route("/cursos/<int:id>", methods=["DELETE"])
+def excluir_curso(id):
+
+    conn = conectar()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        DELETE FROM cursos
+        WHERE id = ?
+    """, (id,))
+
+    conn.commit()
+    conn.close()
+
+    return {
+        "mensagem": "Curso excluído com sucesso"
+    }
+
 
 @app.route("/alunos", methods=["GET"])
 def listar_alunos():
