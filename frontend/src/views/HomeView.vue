@@ -1,16 +1,13 @@
 <template>
   <div>
-    <Navbar />
 
-    <h1>Sistema Acadêmico</h1>
+    <h1>Sistema Acadêmico UniVenturi</h1>
+
+    <h2>Bem-vinda, Daniela!</h2>
 
     <p>
-      Sistema para gerenciamento de cursos,
-      alunos e notas.
+      Utilize o menu para acessar os módulos.
     </p>
+
   </div>
 </template>
-
-<script setup>
-import Navbar from "../components/Navbar.vue";
-</script>

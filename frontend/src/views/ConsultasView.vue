@@ -2,10 +2,10 @@
 
   <div>
 
-    <h1>Notas</h1>
+    <h1>Consultas</h1>
 
     <p>
-      Gerenciamento de notas dos alunos
+      Busca e ordenação de alunos
     </p>
 
   </div>
