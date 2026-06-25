@@ -7,7 +7,6 @@ def conectar():
 def criar_tabelas():
 
     conn = conectar()
-
     cursor = conn.cursor()
 
     cursor.execute("""
@@ -25,8 +24,7 @@ def criar_tabelas():
             nota1 REAL,
             nota2 REAL,
             nota3 REAL,
-            FOREIGN KEY(aluno_matricula)
-                REFERENCES alunos(matricula)
+            FOREIGN KEY(aluno_matricula) REFERENCES alunos(matricula)
         )
     """)
 
