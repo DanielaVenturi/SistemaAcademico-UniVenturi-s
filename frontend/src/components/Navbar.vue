@@ -25,3 +25,14 @@
 
   </nav>
 </template>
+
+<style scoped>
+nav{
+  padding:20px;
+}
+
+a{
+  margin:10px;
+  text-decoration:none;
+}
+</style>

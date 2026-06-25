@@ -48,3 +48,4 @@ def busca_por_curso(lista_alunos, curso_procurado):
             resultado.append(aluno)
 
     return resultado
+
