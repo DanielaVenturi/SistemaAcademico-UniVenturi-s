@@ -32,3 +32,19 @@ def busca_por_matricula(lista_alunos, matricula):
             return aluno
 
     return None
+
+def busca_por_curso(lista_alunos, curso_procurado):
+
+    resultado = []
+
+    for aluno in lista_alunos:
+
+        if (
+            aluno["curso"]
+            and
+            curso_procurado.lower()
+            in aluno["curso"].lower()
+        ):
+            resultado.append(aluno)
+
+    return resultado

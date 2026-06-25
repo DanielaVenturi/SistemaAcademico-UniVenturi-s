@@ -2,7 +2,11 @@ from flask import Flask, request
 from flask_cors import CORS
 
 from database import criar_tabelas, conectar
-from busca import busca_por_nome, busca_por_matricula
+from busca import (
+    busca_por_nome,
+    busca_por_matricula,
+    busca_por_curso
+)
 from ordenacao import ordenar_por_nome, ordenar_por_matricula
 from relatorios import calcular_media
 
@@ -171,17 +175,57 @@ def buscar_por_nome(nome):
     conn = conectar()
     cursor = conn.cursor()
 
-    cursor.execute("SELECT matricula, nome, curso FROM alunos")
+    cursor.execute("""
+        SELECT a.matricula, a.nome, c.nome
+        FROM alunos a
+        LEFT JOIN cursos c
+        ON a.curso_id = c.id
+    """)
+
     dados = cursor.fetchall()
     conn.close()
 
-    alunos = [
-        {"matricula": a[0], "nome": a[1], "curso": a[2]}
-        for a in dados
-    ]
+    alunos = []
+
+    for a in dados:
+        alunos.append({
+            "matricula": a[0],
+            "nome": a[1],
+            "curso": a[2]
+        })
 
     return busca_por_nome(alunos, nome)
 
+@app.route("/alunos/curso/<curso>")
+def buscar_por_curso(curso):
+
+    conn = conectar()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT a.matricula, a.nome, c.nome
+        FROM alunos a
+        LEFT JOIN cursos c
+        ON a.curso_id = c.id
+    """)
+
+    dados = cursor.fetchall()
+
+    conn.close()
+
+    alunos = []
+
+    for a in dados:
+        alunos.append({
+            "matricula": a[0],
+            "nome": a[1],
+            "curso": a[2]
+        })
+
+    return busca_por_curso(
+        alunos,
+        curso
+    )
 
 @app.route("/alunos/matricula/<int:matricula>")
 def buscar_por_matricula(matricula):
@@ -189,21 +233,36 @@ def buscar_por_matricula(matricula):
     conn = conectar()
     cursor = conn.cursor()
 
-    cursor.execute("SELECT matricula, nome, curso FROM alunos")
+    cursor.execute("""
+        SELECT a.matricula, a.nome, c.nome
+        FROM alunos a
+        LEFT JOIN cursos c
+        ON a.curso_id = c.id
+    """)
+
     dados = cursor.fetchall()
     conn.close()
 
-    alunos = [
-        {"matricula": a[0], "nome": a[1], "curso": a[2]}
-        for a in dados
-    ]
+    alunos = []
 
-    resultado = busca_por_matricula(alunos, matricula)
+    for a in dados:
+        alunos.append({
+            "matricula": a[0],
+            "nome": a[1],
+            "curso": a[2]
+        })
+
+    resultado = busca_por_matricula(
+        alunos,
+        matricula
+    )
 
     if resultado:
         return resultado
 
-    return {"erro": "Aluno não encontrado"}, 404
+    return {
+        "erro": "Aluno não encontrado"
+    }, 404
 
 
 @app.route("/alunos/ordenados")
@@ -212,17 +271,54 @@ def alunos_ordenados():
     conn = conectar()
     cursor = conn.cursor()
 
-    cursor.execute("SELECT matricula, nome, curso FROM alunos")
+    cursor.execute("""
+        SELECT a.matricula, a.nome, c.nome
+        FROM alunos a
+        LEFT JOIN cursos c
+        ON a.curso_id = c.id
+    """)
+
     dados = cursor.fetchall()
     conn.close()
 
-    alunos = [
-        {"matricula": a[0], "nome": a[1], "curso": a[2]}
-        for a in dados
-    ]
+    alunos = []
+
+    for a in dados:
+        alunos.append({
+            "matricula": a[0],
+            "nome": a[1],
+            "curso": a[2]
+        })
 
     return ordenar_por_nome(alunos)
 
+@app.route("/alunos/ordenados/matricula")
+def alunos_ordenados_matricula():
+
+    conn = conectar()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT a.matricula, a.nome, c.nome
+        FROM alunos a
+        LEFT JOIN cursos c
+        ON a.curso_id = c.id
+    """)
+
+    dados = cursor.fetchall()
+
+    conn.close()
+
+    alunos = []
+
+    for a in dados:
+        alunos.append({
+            "matricula": a[0],
+            "nome": a[1],
+            "curso": a[2]
+        })
+
+    return ordenar_por_matricula(alunos)
 
 @app.route("/notas", methods=["POST"])
 def cadastrar_notas():
