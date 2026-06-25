@@ -2,7 +2,7 @@ from flask import Flask, request
 from flask_cors import CORS
 from busca import busca_por_nome, busca_por_matricula
 from database import criar_tabelas, conectar
-
+from ordenacao import ordenar_por_nome
 app = Flask(__name__)
 
 CORS(app)
@@ -139,3 +139,30 @@ def buscar_matricula(matricula):
     return {
         "erro": "Aluno não encontrado"
     }, 404
+
+@app.route("/alunos/ordenados")
+def listar_ordenados():
+
+    conn = conectar()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT matricula, nome, curso
+        FROM alunos
+    """)
+
+    dados = cursor.fetchall()
+
+    conn.close()
+
+    alunos = []
+
+    for aluno in dados:
+
+        alunos.append({
+            "matricula": aluno[0],
+            "nome": aluno[1],
+            "curso": aluno[2]
+        })
+
+    return ordenar_por_nome(alunos)
