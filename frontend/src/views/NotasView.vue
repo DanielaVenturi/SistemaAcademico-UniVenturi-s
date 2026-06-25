@@ -1,13 +1,7 @@
 <template>
   <div>
     <Navbar />
-
-    <h1>Sistema Acadêmico</h1>
-
-    <p>
-      Sistema para gerenciamento de cursos,
-      alunos e notas.
-    </p>
+    <h1>Notas</h1>
   </div>
 </template>
 
