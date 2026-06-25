@@ -1,13 +1,23 @@
 <template>
+
+  <h1>
+    Sistema Acadêmico UniVenturi
+  </h1>
+
   <div>
-
-    <h1>Sistema Acadêmico UniVenturi</h1>
-
-    <h2>Bem-vinda, Daniela!</h2>
-
-    <p>
-      Utilize o menu para acessar os módulos.
-    </p>
-
+    👨‍🎓 Total de Alunos
   </div>
+
+  <div>
+    📚 Total de Cursos
+  </div>
+
+  <div>
+    📝 Total de Notas
+  </div>
+
+  <div>
+    📈 Média Geral
+  </div>
+
 </template>

@@ -1,13 +1,27 @@
 <template>
 
-  <div>
+  <h1>🔎 Consultas</h1>
 
-    <h1>Consultas</h1>
+  <input
+    placeholder="Buscar aluno..."
+  >
 
-    <p>
-      Busca e ordenação de alunos
-    </p>
+  <button>
+    Buscar
+  </button>
 
-  </div>
+  <hr>
+
+  <button>
+    Ordenar por Nome
+  </button>
+
+  <button>
+    Ordenar por Matrícula
+  </button>
+
+  <button>
+    Ordenar por Curso
+  </button>
 
 </template>

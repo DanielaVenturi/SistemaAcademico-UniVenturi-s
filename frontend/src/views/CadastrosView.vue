@@ -1,27 +1,13 @@
 <template>
 
-  <div>
+  <h1>📝 Cadastros</h1>
 
-    <h1>📝 Cadastros</h1>
+  <button>
+    ➕ Novo Aluno
+  </button>
 
-    <p>
-      Escolha uma opção:
-    </p>
-
-    <div>
-
-      <router-link to="/cursos">
-        ➕ Gerenciar Cursos
-      </router-link>
-
-      <br><br>
-
-      <router-link to="/alunos">
-        👨‍🎓 Gerenciar Alunos
-      </router-link>
-
-    </div>
-
-  </div>
+  <button>
+    ➕ Novo Curso
+  </button>
 
 </template>
