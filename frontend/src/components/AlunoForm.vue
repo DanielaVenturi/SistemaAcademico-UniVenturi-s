@@ -16,20 +16,47 @@ async function carregarCursos() {
 }
 
 async function salvarAluno() {
+  alert("Cliquei!");
+  if (!matricula.value || !nome.value || !curso_id.value) {
+    alert("Preencha todos os campos.");
+    return;
+  }
 
-  await cadastrarAluno({
-    matricula: Number(matricula.value),
-    nome: nome.value,
-    curso_id: Number(curso_id.value)
-  });
+  try {
 
-  alert("Aluno cadastrado com sucesso!");
+    console.log("Enviando:", {
+      matricula: Number(matricula.value),
+      nome: nome.value,
+      curso_id: Number(curso_id.value)
+    });
 
-  matricula.value = "";
-  nome.value = "";
-  curso_id.value = "";
+    const resposta = await cadastrarAluno({
+      matricula: Number(matricula.value),
+      nome: nome.value,
+      curso_id: Number(curso_id.value)
+    });
 
-  window.location.reload();
+    console.log("Resposta:", resposta);
+
+    alert("Aluno cadastrado com sucesso!");
+
+    matricula.value = "";
+    nome.value = "";
+    curso_id.value = "";
+
+  } catch (erro) {
+
+    console.error("Erro:", erro);
+
+    if (erro.response) {
+      console.log("Status:", erro.response.status);
+      console.log("Resposta:", erro.response.data);
+    }
+
+    alert("Erro ao cadastrar aluno.");
+
+  }
+
 }
 
 onMounted(() => {
