@@ -1,75 +1,135 @@
 <script setup>
 
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
+
 import {
   listarCursos,
   excluirCurso
 } from "../services/cursoService";
 
+import EditarCursoModal from "./EditarCursoModal.vue";
+
 const cursos = ref([]);
+
+const modalAberto = ref(false);
+const cursoSelecionado = ref(null);
 
 async function carregarCursos() {
   cursos.value = await listarCursos();
 }
 
-async function excluir(id) {
+async function excluir(id){
 
-  if (!confirm("Deseja excluir este curso?")) {
+  if(!confirm("Deseja excluir este curso?"))
     return;
-  }
 
   await excluirCurso(id);
 
   carregarCursos();
+
 }
 
-onMounted(() => {
+function abrirModal(curso){
+
+  cursoSelecionado.value = curso;
+
+  modalAberto.value = true;
+
+}
+
+function atualizar(){
+
   carregarCursos();
+
+}
+
+onMounted(()=>{
+
+  carregarCursos();
+
+  window.addEventListener(
+    "cursoAtualizado",
+    atualizar
+  );
+
+});
+
+onUnmounted(()=>{
+
+  window.removeEventListener(
+    "cursoAtualizado",
+    atualizar
+  );
+
 });
 
 </script>
 
 <template>
 
-  <h2>Lista de Cursos</h2>
+<h2>Lista de Cursos</h2>
 
-  <table border="1">
+<table border="1">
 
-    <thead>
+<thead>
 
-      <tr>
-        <th>ID</th>
-        <th>Nome</th>
-        <th>Ações</th>
-      </tr>
+<tr>
 
-    </thead>
+<th>ID</th>
+<th>Nome</th>
+<th>Ações</th>
 
-    <tbody>
+</tr>
 
-      <tr
-        v-for="curso in cursos"
-        :key="curso.id"
-      >
+</thead>
 
-        <td>{{ curso.id }}</td>
+<tbody>
 
-        <td>{{ curso.nome }}</td>
+<tr
+v-for="curso in cursos"
+:key="curso.id"
+>
 
-        <td>
+<td>{{curso.id}}</td>
 
-          <button
-            @click="excluir(curso.id)"
-          >
-            Excluir
-          </button>
+<td>{{curso.nome}}</td>
 
-        </td>
+<td>
 
-      </tr>
+<button
+@click="abrirModal(curso)"
+>
 
-    </tbody>
+Editar
 
-  </table>
+</button>
+
+<button
+@click="excluir(curso.id)"
+>
+
+Excluir
+
+</button>
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+<EditarCursoModal
+
+:aberto="modalAberto"
+
+:curso="cursoSelecionado"
+
+@fechar="modalAberto=false"
+
+@atualizado="carregarCursos"
+
+/>
 
 </template>

@@ -1,9 +1,11 @@
 <script setup>
-
 import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
 
 import { cadastrarAluno } from "../services/alunoService";
 import { listarCursos } from "../services/cursoService";
+
+const emit = defineEmits(["alunoCadastrado"]);
 
 const matricula = ref("");
 const nome = ref("");
@@ -16,7 +18,7 @@ async function carregarCursos() {
 }
 
 async function salvarAluno() {
-  alert("Cliquei!");
+
   if (!matricula.value || !nome.value || !curso_id.value) {
     alert("Preencha todos os campos.");
     return;
@@ -24,19 +26,11 @@ async function salvarAluno() {
 
   try {
 
-    console.log("Enviando:", {
+    await cadastrarAluno({
       matricula: Number(matricula.value),
       nome: nome.value,
       curso_id: Number(curso_id.value)
     });
-
-    const resposta = await cadastrarAluno({
-      matricula: Number(matricula.value),
-      nome: nome.value,
-      curso_id: Number(curso_id.value)
-    });
-
-    console.log("Resposta:", resposta);
 
     alert("Aluno cadastrado com sucesso!");
 
@@ -44,14 +38,11 @@ async function salvarAluno() {
     nome.value = "";
     curso_id.value = "";
 
+    emit("alunoCadastrado");
+
   } catch (erro) {
 
-    console.error("Erro:", erro);
-
-    if (erro.response) {
-      console.log("Status:", erro.response.status);
-      console.log("Resposta:", erro.response.data);
-    }
+    console.error(erro);
 
     alert("Erro ao cadastrar aluno.");
 
@@ -62,7 +53,6 @@ async function salvarAluno() {
 onMounted(() => {
   carregarCursos();
 });
-
 </script>
 
 <template>

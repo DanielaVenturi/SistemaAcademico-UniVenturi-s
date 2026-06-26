@@ -1,5 +1,9 @@
 import api from "./api";
 
+/* =======================
+   CRUD ALUNOS
+======================= */
+
 export async function listarAlunos() {
   const resposta = await api.get("/alunos");
   return resposta.data;
@@ -16,13 +20,13 @@ export async function excluirAluno(matricula) {
 }
 
 export async function atualizarAluno(matricula, aluno) {
-  const resposta = await api.put(
-    `/alunos/${matricula}`,
-    aluno
-  );
-
+  const resposta = await api.put(`/alunos/${matricula}`, aluno);
   return resposta.data;
 }
+
+/* =======================
+   CONSULTAS
+======================= */
 
 export async function buscarPorNome(nome) {
   const resposta = await api.get(`/alunos/busca/${nome}`);
@@ -38,6 +42,10 @@ export async function buscarPorCurso(curso) {
   const resposta = await api.get(`/alunos/curso/${curso}`);
   return resposta.data;
 }
+
+/* =======================
+   ORDENAÇÃO
+======================= */
 
 export async function ordenarPorNome() {
   const resposta = await api.get("/alunos/ordenados");

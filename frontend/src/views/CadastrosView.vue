@@ -1,6 +1,7 @@
 <script setup>
 
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import { useRoute } from "vue-router";
 
 import CursoForm from "../components/CursoForm.vue";
 import TabelaCursos from "../components/TabelaCursos.vue";
@@ -13,6 +14,22 @@ import ResumoCursos from "../components/ResumoCursos.vue";
 
 const telaAtual = ref("");
 
+const tabelaAlunos = ref(null);
+
+function atualizarTabelaAlunos() {
+  tabelaAlunos.value?.carregarAlunos();
+}
+
+const route = useRoute();
+
+onMounted(() => {
+
+  if (route.query.aba === "cursos") {
+    telaAtual.value = "cursos";
+  }
+
+});
+
 </script>
 
 <template>
@@ -21,7 +38,6 @@ const telaAtual = ref("");
 
     <h1>📝 Cadastros</h1>
 
-    <!-- Tela inicial -->
     <div v-if="telaAtual === ''">
 
       <div class="resumos">
@@ -50,7 +66,6 @@ const telaAtual = ref("");
 
     </div>
 
-    <!-- Tela de Cursos -->
     <div v-if="telaAtual === 'cursos'">
 
       <button
@@ -67,7 +82,6 @@ const telaAtual = ref("");
 
     </div>
 
-    <!-- Tela de Alunos -->
     <div v-if="telaAtual === 'alunos'">
 
       <button
@@ -78,9 +92,13 @@ const telaAtual = ref("");
 
       <h2>👨‍🎓 Gerenciamento de Alunos</h2>
 
-      <AlunoForm />
+      <AlunoForm
+        @alunoCadastrado="atualizarTabelaAlunos"
+      />
 
-      <TabelaAlunos />
+      <TabelaAlunos
+        ref="tabelaAlunos"
+      />
 
     </div>
 

@@ -13,6 +13,14 @@ export async function cadastrarCurso(nome) {
   return resposta.data;
 }
 
+export async function atualizarCurso(id, nome) {
+  const resposta = await api.put(`/cursos/${id}`, {
+    nome
+  });
+
+  return resposta.data;
+}
+
 export async function excluirCurso(id) {
   const resposta = await api.delete(`/cursos/${id}`);
   return resposta.data;

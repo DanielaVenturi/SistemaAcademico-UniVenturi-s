@@ -4,6 +4,7 @@ import HomeView from "../views/HomeView.vue";
 import CadastrosView from "../views/CadastrosView.vue";
 import ConsultasView from "../views/ConsultasView.vue";
 import NotasView from "../views/NotasView.vue";
+import CursosView from "../views/CursosView.vue";
 
 const routes = [
   {
@@ -21,12 +22,14 @@ const routes = [
   {
     path: "/notas",
     component: NotasView
+  },
+  {
+    path: "/cursos",
+    component: CursosView
   }
 ];
 
-const router = createRouter({
-  history: createWebHistory(),
-  routes
+export default createRouter({
+    history: createWebHistory(),
+    routes
 });
-
-export default router;

@@ -5,37 +5,50 @@ import { cadastrarCurso } from "../services/cursoService";
 
 const nome = ref("");
 
-async function salvarCurso() {
+async function salvarCurso(){
 
-  if (!nome.value) {
-    alert("Digite o nome do curso");
-    return;
-  }
+    if(nome.value==""){
+        alert("Digite o nome do curso.");
+        return;
+    }
 
-  await cadastrarCurso(nome.value);
+    try{
 
-  alert("Curso cadastrado com sucesso!");
+        await cadastrarCurso(nome.value);
 
-  nome.value = "";
+        alert("Curso cadastrado com sucesso!");
 
-  window.location.reload();
+        nome.value="";
+
+        window.dispatchEvent(new Event("cursoAtualizado"));
+
+    }catch(e){
+
+        alert("Erro ao cadastrar curso.");
+
+        console.log(e);
+
+    }
+
 }
 
 </script>
 
 <template>
 
-  <h2>Cadastrar Curso</h2>
+<h2>Cadastrar Curso</h2>
 
-  <input
-    v-model="nome"
-    placeholder="Nome do curso"
-  />
+<input
+v-model="nome"
+placeholder="Nome do curso"
+/>
 
-  <button
-    @click="salvarCurso"
-  >
-    Salvar
-  </button>
+<button
+@click="salvarCurso"
+>
+
+Salvar
+
+</button>
 
 </template>

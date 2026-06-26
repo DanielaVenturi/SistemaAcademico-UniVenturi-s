@@ -105,6 +105,29 @@ def excluir_curso(id):
         "mensagem": "Curso excluído com sucesso"
     }
 
+@app.route("/cursos/<int:id>", methods=["PUT"])
+def atualizar_curso(id):
+
+    dados = request.json
+
+    conn = conectar()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        UPDATE cursos
+        SET nome = ?
+        WHERE id = ?
+    """, (
+        dados["nome"],
+        id
+    ))
+
+    conn.commit()
+    conn.close()
+
+    return {
+        "mensagem": "Curso atualizado com sucesso"
+    }
 
 @app.route("/alunos", methods=["GET"])
 def listar_alunos():
