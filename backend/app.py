@@ -544,7 +544,46 @@ def notas_por_aluno(matricula):
 })
 
     return resultado
+@app.route("/notas/<int:id>", methods=["GET"])
+def buscar_nota(id):
 
+    conn = conectar()
+    cursor = conn.cursor()
 
+    cursor.execute("""
+        SELECT
+            id,
+            aluno_matricula,
+            nota1,
+            nota2,
+            nota3
+        FROM notas
+        WHERE id = ?
+    """, (id,))
+
+    nota = cursor.fetchone()
+
+    conn.close()
+
+    if nota is None:
+
+        return {
+            "erro": "Nota não encontrada"
+        }, 404
+
+    return {
+
+        "id": nota[0],
+        "aluno_matricula": nota[1],
+        "nota1": nota[2],
+        "nota2": nota[3],
+        "nota3": nota[4],
+        "media": calcular_media(
+            nota[2],
+            nota[3],
+            nota[4]
+        )
+
+    }
 if __name__ == "__main__":
     app.run(debug=True)
