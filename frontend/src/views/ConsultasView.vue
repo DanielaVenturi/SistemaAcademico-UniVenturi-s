@@ -58,7 +58,7 @@ async function ordenarCurso() {
 
 <div class="container">
 
-<h1>🔎 Consultas</h1>
+<h1>Consultas</h1>
 
 <h3>Buscar aluno</h3>
 

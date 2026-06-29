@@ -419,20 +419,59 @@ def cadastrar_notas():
     cursor = conn.cursor()
 
     cursor.execute("""
-        INSERT INTO notas (aluno_matricula, nota1, nota2, nota3)
-        VALUES (?, ?, ?, ?)
-    """, (
+
+        SELECT id
+        FROM notas
+        WHERE aluno_matricula = ?
+
+    """,(dados["aluno_matricula"],))
+
+    existe = cursor.fetchone()
+
+    if existe:
+
+        conn.close()
+
+        return {
+            "erro":"Este aluno já possui notas."
+        },400
+
+    cursor.execute("""
+
+        INSERT INTO notas
+        (
+            aluno_matricula,
+            nota1,
+            nota2,
+            nota3
+        )
+
+        VALUES
+        (
+            ?,
+            ?,
+            ?,
+            ?
+        )
+
+    """,(
+
         dados["aluno_matricula"],
         dados["nota1"],
         dados["nota2"],
         dados["nota3"]
+
     ))
 
     conn.commit()
+
     conn.close()
 
-    return {"mensagem": "Notas cadastradas com sucesso"}
+    return{
 
+        "mensagem":"Notas cadastradas."
+
+    }
 
 @app.route("/notas", methods=["GET"])
 def listar_notas():

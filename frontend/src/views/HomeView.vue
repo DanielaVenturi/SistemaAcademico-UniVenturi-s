@@ -124,11 +124,11 @@ function abrirAluno(aluno){
 
 <div class="container">
 
-  <h1>🎓 Sistema Acadêmico UniVenturi</h1>
+  <h1>Sistema Acadêmico UniVenturi</h1>
 
   <div class="painel">
 
-    <h2>🔎 Buscar Alunos</h2>
+    <h2> Buscar Alunos</h2>
 
     <div class="linha">
 

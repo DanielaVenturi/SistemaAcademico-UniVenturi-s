@@ -7,7 +7,7 @@ import TabelaAlunos from "../components/TabelaAlunos.vue";
 
 <template>
 
-  <h1>👨‍🎓 Alunos</h1>
+  <h1> Alunos</h1>
 
   <AlunoForm />
 

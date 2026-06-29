@@ -2,19 +2,17 @@
   <nav class="navbar">
 
     <router-link to="/">
-      🏠 Início
+      Início
     </router-link>
 
     <router-link to="/cadastros">
-      📝 Cadastros
+      Cadastros
     </router-link>
 
-    <router-link to="/consultas">
-      🔎 Consultas
-    </router-link>
+    
 
     <router-link to="/notas">
-      📊 Notas
+      Notas
     </router-link>
 
   </nav>

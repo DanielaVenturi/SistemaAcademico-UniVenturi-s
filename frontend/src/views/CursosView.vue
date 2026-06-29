@@ -19,7 +19,7 @@ const router = useRouter();
       ← Voltar
     </button>
 
-    <h1>📚 Gerenciamento de Cursos</h1>
+    <h1> Gerenciamento de Cursos</h1>
 
     <CursoForm />
 

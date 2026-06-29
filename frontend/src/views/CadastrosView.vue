@@ -53,13 +53,13 @@ onMounted(() => {
         <button
           @click="telaAtual = 'alunos'"
         >
-          👨‍🎓 Gerenciar Alunos
+          Gerenciar Alunos
         </button>
 
         <button
           @click="telaAtual = 'cursos'"
         >
-          📚 Gerenciar Cursos
+          Gerenciar Cursos
         </button>
 
       </div>
