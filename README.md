@@ -61,9 +61,11 @@ cd backend
 ## 3° Passo
 
 Ative o ambiente virtual.
-
 ```powershell
 python -m venv venv
+```
+```powershell
+
 
 
 .\venv\Scripts\Activate.ps1
