@@ -511,7 +511,7 @@ def notas_por_aluno(matricula):
     cursor = conn.cursor()
 
     cursor.execute("""
-        SELECT nota1, nota2, nota3
+        SELECT id, nota1, nota2, nota3
         FROM notas
         WHERE aluno_matricula = ?
     """, (matricula,))
@@ -525,12 +525,23 @@ def notas_por_aluno(matricula):
     resultado = []
 
     for n in dados:
-        resultado.append({
-            "nota1": n[0],
-            "nota2": n[1],
-            "nota3": n[2],
-            "media": calcular_media(n[0], n[1], n[2])
-        })
+       resultado.append({
+
+    "id": n[0],
+
+    "nota1": n[1],
+
+    "nota2": n[2],
+
+    "nota3": n[3],
+
+    "media": calcular_media(
+        n[1],
+        n[2],
+        n[3]
+    )
+
+})
 
     return resultado
 
