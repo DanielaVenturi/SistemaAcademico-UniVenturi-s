@@ -155,6 +155,41 @@ def listar_alunos():
 
     return alunos
 
+@app.route("/alunos/<int:matricula>", methods=["GET"])
+def buscar_aluno(matricula):
+
+    conn = conectar()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT
+            a.matricula,
+            a.nome,
+            c.id,
+            c.nome
+        FROM alunos a
+        LEFT JOIN cursos c
+        ON a.curso_id = c.id
+        WHERE a.matricula = ?
+    """, (matricula,))
+
+    aluno = cursor.fetchone()
+
+    conn.close()
+
+    if aluno is None:
+
+        return {
+            "erro": "Aluno não encontrado"
+        }, 404
+
+    return {
+        "matricula": aluno[0],
+        "nome": aluno[1],
+        "curso_id": aluno[2],
+        "curso": aluno[3]
+    }
+
 @app.route("/alunos/<int:matricula>", methods=["PUT"])
 def atualizar_aluno(matricula):
 
