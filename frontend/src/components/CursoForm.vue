@@ -1,32 +1,50 @@
 <script setup>
 
 import { ref } from "vue";
+
 import { cadastrarCurso } from "../services/cursoService";
+
+const emit = defineEmits([
+    "cursoCadastrado"
+]);
 
 const nome = ref("");
 
-async function salvarCurso(){
+async function salvar(){
 
-    if(nome.value==""){
-        alert("Digite o nome do curso.");
+    if(nome.value.trim()==""){
+
+        alert("Informe o nome do curso.");
+
         return;
+
     }
 
     try{
 
-        await cadastrarCurso(nome.value);
+        const resposta = await cadastrarCurso({
+
+            nome:nome.value
+
+        });
+
+        if(resposta.erro){
+
+            alert(resposta.erro);
+
+            return;
+
+        }
 
         alert("Curso cadastrado com sucesso!");
 
         nome.value="";
 
-        window.dispatchEvent(new Event("cursoAtualizado"));
+        emit("cursoCadastrado");
 
-    }catch(e){
+    }catch{
 
         alert("Erro ao cadastrar curso.");
-
-        console.log(e);
 
     }
 
@@ -36,19 +54,112 @@ async function salvarCurso(){
 
 <template>
 
-<h2>Cadastrar Curso</h2>
+<div class="card">
 
-<input
-v-model="nome"
-placeholder="Nome do curso"
-/>
+    <h3>
 
-<button
-@click="salvarCurso"
->
+        Cadastro de Curso
 
-Salvar
+    </h3>
 
-</button>
+    <div class="grid">
+
+        <div>
+
+            <label>
+
+                Nome do Curso
+
+            </label>
+
+            <input
+                v-model="nome"
+                type="text"
+                placeholder="Ex.: Engenharia de Software"
+            >
+
+        </div>
+
+    </div>
+
+    <button @click="salvar">
+
+        Salvar Curso
+
+    </button>
+
+</div>
 
 </template>
+
+<style scoped>
+
+.card{
+
+    background:white;
+    padding:30px;
+    border-radius:14px;
+    box-shadow:0 4px 15px rgba(0,0,0,.08);
+    margin-bottom:30px;
+
+}
+
+h3{
+
+    margin-top:0;
+    margin-bottom:25px;
+    color:#1e3a8a;
+
+}
+
+.grid{
+
+    display:grid;
+
+}
+
+label{
+
+    display:block;
+    margin-bottom:8px;
+    font-weight:600;
+
+}
+
+input{
+
+    width:100%;
+    padding:12px;
+    border:1px solid #d1d5db;
+    border-radius:10px;
+    font-size:15px;
+    box-sizing:border-box;
+
+}
+
+input:focus{
+
+    outline:none;
+    border-color:#2563eb;
+
+}
+
+button{
+
+    margin-top:25px;
+    padding:12px 25px;
+    border:none;
+    border-radius:10px;
+    background:#2563eb;
+    color:white;
+    cursor:pointer;
+
+}
+
+button:hover{
+
+    background:#1d4ed8;
+
+}
+
+</style>

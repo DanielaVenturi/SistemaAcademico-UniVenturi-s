@@ -77,19 +77,32 @@ def cadastrar_aluno():
     conn = conectar()
     cursor = conn.cursor()
 
-    cursor.execute("""
-        INSERT INTO alunos (matricula, nome, curso_id)
-        VALUES (?, ?, ?)
-    """, (
-        dados["matricula"],
-        dados["nome"],
-        dados["curso_id"]
-    ))
+    try:
 
-    conn.commit()
-    conn.close()
+        cursor.execute("""
+            INSERT INTO alunos (matricula, nome, curso_id)
+            VALUES (?, ?, ?)
+        """, (
+            dados["matricula"],
+            dados["nome"],
+            dados["curso_id"]
+        ))
 
-    return {"mensagem": "Aluno cadastrado com sucesso"}
+        conn.commit()
+
+        return {
+            "mensagem": "Aluno cadastrado com sucesso"
+        }
+
+    except Exception as erro:
+
+        return {
+            "erro": str(erro)
+        }, 400
+
+    finally:
+
+        conn.close()
 
 @app.route("/cursos/<int:id>", methods=["DELETE"])
 def excluir_curso(id):
@@ -631,12 +644,14 @@ def relatorio():
     conn = conectar()
     cursor = conn.cursor()
 
-    # Lista de alunos
     cursor.execute("""
         SELECT
-            matricula,
-            nome
-        FROM alunos
+            a.matricula,
+            a.nome,
+            c.nome
+        FROM alunos a
+        LEFT JOIN cursos c
+        ON a.curso_id = c.id
     """)
 
     alunos = []
@@ -647,11 +662,12 @@ def relatorio():
 
             "matricula": a[0],
 
-            "nome": a[1]
+            "nome": a[1],
+
+            "curso": a[2]
 
         })
 
-    # Lista de notas
     cursor.execute("""
         SELECT
             aluno_matricula,

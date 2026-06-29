@@ -1,98 +1,237 @@
 <script setup>
+
 import { ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
 
-import { cadastrarAluno } from "../services/alunoService";
-import { listarCursos } from "../services/cursoService";
+import {
+    cadastrarAluno
+} from "../services/alunoService";
 
-const emit = defineEmits(["alunoCadastrado"]);
+import {
+    listarCursos
+} from "../services/cursoService";
+
+const emit = defineEmits([
+    "alunoCadastrado"
+]);
 
 const matricula = ref("");
 const nome = ref("");
-const curso_id = ref("");
+const curso = ref("");
 
 const cursos = ref([]);
 
-async function carregarCursos() {
-  cursos.value = await listarCursos();
+async function carregarCursos(){
+
+    cursos.value = await listarCursos();
+
 }
 
-async function salvarAluno() {
+async function salvar(){
 
-  if (!matricula.value || !nome.value || !curso_id.value) {
-    alert("Preencha todos os campos.");
-    return;
-  }
+   try{
 
-  try {
+    const resposta = await cadastrarAluno({
 
-    await cadastrarAluno({
-      matricula: Number(matricula.value),
-      nome: nome.value,
-      curso_id: Number(curso_id.value)
+        matricula:Number(matricula.value),
+
+        nome:nome.value,
+
+        curso_id:Number(curso.value)
+
     });
+
+    if(resposta.erro){
+
+        alert(resposta.erro);
+
+        return;
+
+    }
 
     alert("Aluno cadastrado com sucesso!");
 
-    matricula.value = "";
-    nome.value = "";
-    curso_id.value = "";
+    matricula.value="";
+    nome.value="";
+    curso.value="";
 
     emit("alunoCadastrado");
 
-  } catch (erro) {
-
-    console.error(erro);
+}catch(e){
 
     alert("Erro ao cadastrar aluno.");
 
-  }
+}}
 
-}
+onMounted(()=>{
 
-onMounted(() => {
-  carregarCursos();
+    carregarCursos();
+
 });
+
 </script>
 
 <template>
 
-  <h2>Cadastrar Aluno</h2>
+<div class="card">
 
-  <input
-    v-model="matricula"
-    placeholder="Matrícula"
-  />
+    <h3>
 
-  <br><br>
+        Cadastro de Aluno
 
-  <input
-    v-model="nome"
-    placeholder="Nome"
-  />
+    </h3>
 
-  <br><br>
+    <div class="grid">
 
-  <select v-model="curso_id">
+        <div>
 
-    <option value="">
-      Selecione um curso
-    </option>
+            <label>
 
-    <option
-      v-for="curso in cursos"
-      :key="curso.id"
-      :value="curso.id"
+                Matrícula
+
+            </label>
+
+            <input
+                type="number"
+                v-model="matricula"
+            >
+
+        </div>
+
+        <div>
+
+            <label>
+
+                Nome
+
+            </label>
+
+            <input
+                type="text"
+                v-model="nome"
+            >
+
+        </div>
+
+        <div>
+
+            <label>
+
+                Curso
+
+            </label>
+
+            <select
+                v-model="curso"
+            >
+
+                <option value="">
+
+                    Selecione...
+
+                </option>
+
+                <option
+                    v-for="c in cursos"
+                    :key="c.id"
+                    :value="c.id"
+                >
+
+                    {{ c.nome }}
+
+                </option>
+
+            </select>
+
+        </div>
+
+    </div>
+
+    <button
+        @click="salvar"
     >
-      {{ curso.nome }}
-    </option>
 
-  </select>
+        Salvar Aluno
 
-  <br><br>
+    </button>
 
-  <button @click="salvarAluno">
-    Salvar
-  </button>
+</div>
 
 </template>
+
+<style scoped>
+
+.card{
+
+    background:white;
+    padding:30px;
+    border-radius:14px;
+    box-shadow:0 4px 15px rgba(0,0,0,.08);
+    margin-bottom:30px;
+
+}
+
+h3{
+
+    margin-top:0;
+    color:#1e3a8a;
+    margin-bottom:25px;
+
+}
+
+.grid{
+
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:20px;
+
+}
+
+label{
+
+    display:block;
+    margin-bottom:8px;
+    font-weight:600;
+    color:#444;
+
+}
+
+input,
+select{
+
+    width:100%;
+    padding:12px;
+    border:1px solid #d1d5db;
+    border-radius:10px;
+    font-size:15px;
+    box-sizing:border-box;
+
+}
+
+input:focus,
+select:focus{
+
+    outline:none;
+    border-color:#2563eb;
+
+}
+
+button{
+
+    margin-top:25px;
+    padding:12px 25px;
+    border:none;
+    border-radius:10px;
+    background:#2563eb;
+    color:white;
+    cursor:pointer;
+    font-size:15px;
+
+}
+
+button:hover{
+
+    background:#1d4ed8;
+
+}
+
+</style>

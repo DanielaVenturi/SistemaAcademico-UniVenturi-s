@@ -22,97 +22,259 @@ onMounted(() => {
 
 <template>
 
-<div class="container">
+<div
+    class="container"
+    v-if="relatorio"
+>
 
-    <h1>📊 Relatórios</h1>
 
-    <div
-        v-if="relatorio"
-    >
+   
 
-        <div class="cards">
+    <div class="cards">
 
-            <div class="card azul">
+        <div class="card azul">
+            <h2>{{ relatorio.total_alunos }}</h2>
+            <p>Alunos</p>
+        </div>
 
-                <h3>Total de Alunos</h3>
+        <div class="card verde">
+            <h2>{{ relatorio.aprovados }}</h2>
+            <p>Aprovados</p>
+        </div>
 
-                <h2>{{ relatorio.total_alunos }}</h2>
+        <div class="card vermelho">
+            <h2>{{ relatorio.reprovados }}</h2>
+            <p>Reprovados</p>
+        </div>
 
-            </div>
+        <div class="card roxo">
+            <h2>{{ relatorio.media_geral }}</h2>
+            <p>Média Geral</p>
+        </div>
 
-            <div class="card verde">
+    </div>
 
-                <h3>Aprovados</h3>
 
-                <h2>{{ relatorio.aprovados }}</h2>
+    <div class="destaques">
 
-            </div>
+        <div
+            class="box melhor"
+            v-if="relatorio.melhor_aluno"
+        >
 
-            <div class="card vermelho">
+            <h2>Melhor Aluno</h2>
 
-                <h3>Reprovados</h3>
+            <h3>{{ relatorio.melhor_aluno.nome }}</h3>
 
-                <h2>{{ relatorio.reprovados }}</h2>
+            <p>
 
-            </div>
+                <strong>Curso:</strong>
 
-            <div class="card roxo">
+                {{ relatorio.melhor_aluno.curso }}
 
-                <h3>Média Geral</h3>
+            </p>
 
-                <h2>{{ relatorio.media_geral }}</h2>
+            <p>
 
-            </div>
+                Média:
+
+                <strong>{{ relatorio.melhor_aluno.media }}</strong>
+
+            </p>
 
         </div>
 
-        <div class="destaques">
+        <div
+            class="box pior"
+            v-if="relatorio.pior_aluno"
+        >
 
-            <div class="box">
+            <h2>Pior Aluno</h2>
 
-                <h2>🏆 Melhor Aluno</h2>
+            <h3>{{ relatorio.pior_aluno.nome }}</h3>
 
-                <p>
+            <p>
 
-                    <strong>
+                <strong>Curso:</strong>
 
-                        {{ relatorio.melhor_aluno?.nome || "-" }}
+                {{ relatorio.pior_aluno.curso }}
 
-                    </strong>
+            </p>
 
-                </p>
+            <p>
 
-                <h1>
+                Média:
 
-                    {{ relatorio.melhor_aluno?.media || "-" }}
+                <strong>{{ relatorio.pior_aluno.media }}</strong>
 
-                </h1>
-
-            </div>
-
-            <div class="box">
-
-                <h2>📉 Pior Aluno</h2>
-
-                <p>
-
-                    <strong>
-
-                        {{ relatorio.pior_aluno?.nome || "-" }}
-
-                    </strong>
-
-                </p>
-
-                <h1>
-
-                    {{ relatorio.pior_aluno?.media || "-" }}
-
-                </h1>
-
-            </div>
+            </p>
 
         </div>
+
+    </div>
+
+
+    <div class="secao">
+
+        <h2>Ranking de Médias</h2>
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>#</th>
+
+                    <th>Aluno</th>
+
+                    <th>Curso</th>
+
+                    <th>Média</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr
+                    v-for="(aluno,index) in relatorio.ranking"
+                    :key="aluno.matricula"
+                >
+
+                    <td>{{ index + 1 }}</td>
+
+                    <td>{{ aluno.nome }}</td>
+
+                    <td>{{ aluno.curso }}</td>
+
+                    <td>{{ aluno.media }}</td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    
+
+    <div class="secao">
+
+        <h2>Desempenho por Curso</h2>
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Curso</th>
+
+                    <th>Alunos</th>
+
+                    <th>Média</th>
+
+                    <th>Aprovados</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr
+                    v-for="curso in relatorio.cursos"
+                    :key="curso.nome"
+                >
+
+                    <td>{{ curso.nome }}</td>
+
+                    <td>{{ curso.alunos }}</td>
+
+                    <td>{{ curso.media }}</td>
+
+                    <td>{{ curso.aprovados }}</td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <!-- Todos os alunos -->
+
+    <div class="secao">
+
+        <h2>Lista Geral</h2>
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Matrícula</th>
+
+                    <th>Nome</th>
+
+                    <th>Curso</th>
+
+                    <th>Média</th>
+
+                    <th>Situação</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr
+                    v-for="aluno in relatorio.alunos"
+                    :key="aluno.matricula"
+                >
+
+                    <td>{{ aluno.matricula }}</td>
+
+                    <td>{{ aluno.nome }}</td>
+
+                    <td>{{ aluno.curso }}</td>
+
+                    <td>
+
+                        {{ aluno.media ?? "-" }}
+
+                    </td>
+
+                    <td>
+
+                        <span
+                            :class="[
+                                'badge',
+                                aluno.situacao=='Aprovado'
+                                    ? 'verde'
+                                    : aluno.situacao=='Reprovado'
+                                    ? 'vermelho'
+                                    : 'cinza'
+                            ]"
+                        >
+
+                            {{ aluno.situacao }}
+
+                        </span>
+
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
 
     </div>
 
@@ -123,129 +285,155 @@ onMounted(() => {
 <style scoped>
 
 .container{
-
-    max-width:1200px;
-
-    margin:auto;
-
-    padding:35px;
-
+    max-width: 1200px;
+    margin: auto;
+    padding: 35px;
 }
 
 h1{
-
-    text-align:center;
-
-    color:#1e3a8a;
-
-    margin-bottom:35px;
-
+    text-align: center;
+    color: #1e3a8a;
+    margin-bottom: 35px;
 }
 
 .cards{
-
-    display:grid;
-
-    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-
-    gap:20px;
-
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+    gap: 20px;
+    margin-bottom: 35px;
 }
 
 .card{
-
-    padding:25px;
-
-    border-radius:15px;
-
-    color:white;
-
-    text-align:center;
-
-    box-shadow:0 3px 12px rgba(0,0,0,.15);
-
-}
-
-.card h3{
-
-    margin:0;
-
-    font-weight:500;
-
+    color: white;
+    border-radius: 14px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,.12);
 }
 
 .card h2{
+    margin: 0;
+    font-size: 38px;
+}
 
-    font-size:38px;
-
-    margin-top:20px;
-
+.card p{
+    margin-top: 10px;
+    font-size: 17px;
 }
 
 .azul{
-
     background:#2563eb;
-
 }
 
 .verde{
-
     background:#16a34a;
-
 }
 
 .vermelho{
-
     background:#dc2626;
-
 }
 
 .roxo{
-
     background:#7c3aed;
-
 }
 
 .destaques{
-
     display:grid;
-
-    grid-template-columns:1fr 1fr;
-
-    gap:25px;
-
-    margin-top:35px;
-
+    grid-template-columns:repeat(auto-fit,minmax(350px,1fr));
+    gap:20px;
+    margin-bottom:35px;
 }
 
 .box{
-
     background:white;
-
-    border-radius:15px;
-
-    padding:30px;
-
-    text-align:center;
-
-    box-shadow:0 3px 12px rgba(0,0,0,.08);
-
+    padding:25px;
+    border-radius:14px;
+    box-shadow:0 5px 15px rgba(0,0,0,.08);
 }
 
-.box h1{
+.melhor{
+    border-left:8px solid #22c55e;
+}
 
-    color:#2563eb;
+.pior{
+    border-left:8px solid #ef4444;
+}
 
-    margin-top:15px;
+.box h2{
+    margin-top:0;
+}
 
+.box h3{
+    color:#1e3a8a;
+    margin-bottom:10px;
+}
+
+.secao{
+    margin-top:35px;
+}
+
+.secao h2{
+    margin-bottom:18px;
+    color:#1e3a8a;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:0 4px 12px rgba(0,0,0,.08);
+}
+
+thead{
+    background:#2563eb;
+    color:white;
+}
+
+th{
+    padding:14px;
+    text-align:left;
+}
+
+td{
+    padding:14px;
+    border-bottom:1px solid #eee;
+}
+
+tbody tr:hover{
+    background:#f8fbff;
+}
+
+.badge{
+    padding:6px 14px;
+    border-radius:25px;
+    color:white;
+    font-weight:bold;
+    display:inline-block;
+}
+
+.badge.verde{
+    background:#22c55e;
+}
+
+.badge.vermelho{
+    background:#ef4444;
+}
+
+.badge.cinza{
+    background:#9ca3af;
 }
 
 @media(max-width:700px){
 
-    .destaques{
+    .container{
+        padding:20px;
+    }
 
-        grid-template-columns:1fr;
-
+    table{
+        display:block;
+        overflow-x:auto;
     }
 
 }

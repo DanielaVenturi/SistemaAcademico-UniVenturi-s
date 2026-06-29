@@ -13,20 +13,24 @@ import ResumoAlunos from "../components/ResumoAlunos.vue";
 import ResumoCursos from "../components/ResumoCursos.vue";
 
 const telaAtual = ref("");
-
+const tabelaCursos = ref(null);
 const tabelaAlunos = ref(null);
 
-function atualizarTabelaAlunos() {
-  tabelaAlunos.value?.carregarAlunos();
+function atualizarTabelaAlunos(){
+    tabelaAlunos.value?.carregarAlunos();
 }
+function atualizarTabelaCursos(){
 
+    tabelaCursos.value?.carregarCursos();
+
+}
 const route = useRoute();
 
-onMounted(() => {
+onMounted(()=>{
 
-  if (route.query.aba === "cursos") {
-    telaAtual.value = "cursos";
-  }
+    if(route.query.aba=="cursos"){
+        telaAtual.value="cursos";
+    }
 
 });
 
@@ -34,99 +38,248 @@ onMounted(() => {
 
 <template>
 
-  <div class="container">
+<div class="container">
 
-    <h1>📝 Cadastros</h1>
+    <h1>Cadastros</h1>
 
-    <div v-if="telaAtual === ''">
+    <p
+        v-if="telaAtual==''"
+        class="subtitulo"
+    >
+        Escolha o módulo que deseja gerenciar.
+    </p>
 
-      <div class="resumos">
+    
 
-        <ResumoAlunos />
+    <div
+        v-if="telaAtual==''"
+        class="cards"
+    >
 
-        <ResumoCursos />
+        <div class="card">
 
-      </div>
+            
 
-      <div class="acoes">
+            <h2>
+
+                Alunos
+
+            </h2>
+
+            <p>
+
+                Cadastre, edite e exclua alunos do sistema.
+
+            </p>
+
+            <button
+                @click="telaAtual='alunos'"
+            >
+
+                Gerenciar Alunos
+
+            </button>
+
+        </div>
+
+        <div class="card">
+
+            
+
+            <h2>
+
+                Cursos
+
+            </h2>
+
+            <p>
+
+                Cadastre e edite todos os cursos.
+
+            </p>
+
+            <button
+                @click="telaAtual='cursos'"
+            >
+
+                Gerenciar Cursos
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <div
+        v-if="telaAtual=='alunos'"
+    >
 
         <button
-          @click="telaAtual = 'alunos'"
+            class="voltar"
+            @click="telaAtual=''"
         >
-          Gerenciar Alunos
+
+            ← Voltar
+
         </button>
+
+        <h2 class="titulo">
+
+            Gerenciamento de Alunos
+
+        </h2>
+
+        <AlunoForm
+            @alunoCadastrado="atualizarTabelaAlunos"
+        />
+
+        <TabelaAlunos
+            ref="tabelaAlunos"
+        />
+
+    </div>
+
+    <div
+        v-if="telaAtual=='cursos'"
+    >
 
         <button
-          @click="telaAtual = 'cursos'"
+            class="voltar"
+            @click="telaAtual=''"
         >
-          Gerenciar Cursos
+
+            ← Voltar
+
         </button>
 
-      </div>
+        <h2 class="titulo">
+
+            Gerenciamento de Cursos
+
+        </h2>
+
+       <CursoForm
+    @cursoCadastrado="atualizarTabelaCursos"
+/>
+
+<TabelaCursos
+    ref="tabelaCursos"
+/>
 
     </div>
 
-    <div v-if="telaAtual === 'cursos'">
-
-      <button
-        @click="telaAtual = ''"
-      >
-        ← Voltar
-      </button>
-
-      <h2>📚 Gerenciamento de Cursos</h2>
-
-      <CursoForm />
-
-      <TabelaCursos />
-
-    </div>
-
-    <div v-if="telaAtual === 'alunos'">
-
-      <button
-        @click="telaAtual = ''"
-      >
-        ← Voltar
-      </button>
-
-      <h2>👨‍🎓 Gerenciamento de Alunos</h2>
-
-      <AlunoForm
-        @alunoCadastrado="atualizarTabelaAlunos"
-      />
-
-      <TabelaAlunos
-        ref="tabelaAlunos"
-      />
-
-    </div>
-
-  </div>
+</div>
 
 </template>
 
 <style scoped>
 
 .container{
-  padding:30px;
+
+    max-width:1200px;
+    margin:auto;
+    padding:35px;
+
+}
+
+h1{
+
+    text-align:center;
+    color:#1e3a8a;
+    margin-bottom:10px;
+
+}
+
+.subtitulo{
+
+    text-align:center;
+    color:#666;
+    margin-bottom:35px;
+
 }
 
 .resumos{
-  display:flex;
-  gap:20px;
-  margin:25px 0;
-  flex-wrap:wrap;
+
+    display:flex;
+    gap:20px;
+    margin-bottom:35px;
+    flex-wrap:wrap;
+
 }
 
-.acoes{
-  margin-top:20px;
+.cards{
+
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+    gap:30px;
+
+}
+
+.card{
+
+    background:white;
+    border-radius:16px;
+    padding:35px;
+    text-align:center;
+    box-shadow:0 5px 15px rgba(0,0,0,.08);
+    transition:.25s;
+
+}
+
+.card:hover{
+
+    transform:translateY(-6px);
+    box-shadow:0 10px 25px rgba(0,0,0,.12);
+
+}
+
+
+
+.card h2{
+
+    color:#1e3a8a;
+    margin-bottom:12px;
+
+}
+
+.card p{
+
+    color:#666;
+    min-height:45px;
+
 }
 
 button{
-  padding:10px 18px;
-  margin-right:10px;
-  cursor:pointer;
+
+    margin-top:20px;
+    padding:12px 22px;
+    border:none;
+    border-radius:10px;
+    background:#2563eb;
+    color:white;
+    cursor:pointer;
+    transition:.2s;
+    font-size:15px;
+
+}
+
+button:hover{
+
+    background:#1d4ed8;
+
+}
+
+.voltar{
+
+    margin-bottom:25px;
+
+}
+
+.titulo{
+
+    color:#1e3a8a;
+    margin-bottom:25px;
+
 }
 
 </style>

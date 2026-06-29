@@ -13,6 +13,8 @@ def gerar_relatorio(alunos, notas):
     melhor_aluno = None
     pior_aluno = None
 
+    cursos = {}
+
     for aluno in alunos:
 
         media = None
@@ -34,22 +36,43 @@ def gerar_relatorio(alunos, notas):
                     else "Reprovado"
                 )
 
+                soma_medias += media
+
                 if media >= 6:
                     aprovados += 1
                 else:
                     reprovados += 1
 
-                soma_medias += media
+                curso = aluno["curso"]
+
+                if curso not in cursos:
+
+                    cursos[curso] = {
+                        "nome": curso,
+                        "alunos": 0,
+                        "soma": 0,
+                        "aprovados": 0
+                    }
+
+                cursos[curso]["alunos"] += 1
+                cursos[curso]["soma"] += media
+
+                if media >= 6:
+                    cursos[curso]["aprovados"] += 1
 
                 if melhor_aluno is None or media > melhor_aluno["media"]:
+
                     melhor_aluno = {
                         "nome": aluno["nome"],
+                        "curso": aluno["curso"],
                         "media": media
                     }
 
                 if pior_aluno is None or media < pior_aluno["media"]:
+
                     pior_aluno = {
                         "nome": aluno["nome"],
+                        "curso": aluno["curso"],
                         "media": media
                     }
 
@@ -61,19 +84,54 @@ def gerar_relatorio(alunos, notas):
 
             "nome": aluno["nome"],
 
+            "curso": aluno["curso"],
+
             "media": media,
 
             "situacao": situacao
 
         })
 
+    lista_cursos = []
+
+    for curso in cursos.values():
+
+        lista_cursos.append({
+
+            "nome": curso["nome"],
+
+            "alunos": curso["alunos"],
+
+            "media": round(
+                curso["soma"] / curso["alunos"],
+                2
+            ),
+
+            "aprovados": curso["aprovados"]
+
+        })
+
     media_geral = 0
 
     if len(notas) > 0:
+
         media_geral = round(
             soma_medias / len(notas),
             2
         )
+
+    ranking = sorted(
+
+        [
+            a for a in relatorio_alunos
+            if a["media"] is not None
+        ],
+
+        key=lambda x: x["media"],
+
+        reverse=True
+
+    )
 
     return {
 
@@ -89,6 +147,10 @@ def gerar_relatorio(alunos, notas):
 
         "pior_aluno": pior_aluno,
 
-        "alunos": relatorio_alunos
+        "alunos": relatorio_alunos,
+
+        "ranking": ranking,
+
+        "cursos": lista_cursos
 
     }

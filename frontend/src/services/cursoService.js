@@ -5,20 +5,29 @@ export async function listarCursos() {
   return resposta.data;
 }
 
-export async function cadastrarCurso(nome) {
-  const resposta = await api.post("/cursos", {
-    nome
-  });
+export async function cadastrarCurso(dados){
 
-  return resposta.data;
+    const resposta = await api.post(
+        "/cursos",
+        dados
+    );
+
+    return resposta.data;
+
 }
 
-export async function atualizarCurso(id, nome) {
-  const resposta = await api.put(`/cursos/${id}`, {
-    nome
-  });
+export async function atualizarCurso(id, dados){
 
-  return resposta.data;
+    const resposta = await api.put(
+
+        `/cursos/${id}`,
+
+        dados
+
+    );
+
+    return resposta.data;
+
 }
 
 export async function excluirCurso(id) {

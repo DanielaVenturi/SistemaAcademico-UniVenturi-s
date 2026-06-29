@@ -4,80 +4,51 @@ import { ref, onMounted } from "vue";
 
 import {
   listarAlunos,
-  excluirAluno,
-  atualizarAluno
+  excluirAluno
 } from "../services/alunoService";
 
-import { listarCursos } from "../services/cursoService";
 import EditarAlunoModal from "./EditarAlunoModal.vue";
 
-const modalAberto = ref(false);
-const alunoSelecionado = ref(null);
 const alunos = ref([]);
-const cursos = ref([]);
-const editando = ref(null);
-const nome = ref("");
-const curso_id = ref("");
 
-async function carregarAlunos() {
-  alunos.value = await listarAlunos();
-}
+const modalAberto = ref(false);
 
-async function carregarCursos() {
-  cursos.value = await listarCursos();
-}
+const alunoSelecionado = ref(null);
 
-async function excluir(matricula) {
+async function carregarAlunos(){
 
-  if (!confirm("Deseja excluir este aluno?"))
-    return;
-
-  await excluirAluno(matricula);
-
-  carregarAlunos();
-}
-
-function editar(aluno) {
-
-  editando.value = aluno.matricula;
-
-  nome.value = aluno.nome;
-
-  const curso = cursos.value.find(
-    c => c.nome == aluno.curso
-  );
-
-  curso_id.value = curso ? curso.id : "";
+    alunos.value = await listarAlunos();
 
 }
 
-async function salvarEdicao(matricula) {
+async function excluir(matricula){
 
-  await atualizarAluno(
-    matricula,
-    {
-      nome: nome.value,
-      curso_id: curso_id.value
-    }
-  );
+    if(!confirm("Deseja realmente excluir este aluno?"))
+        return;
 
-  editando.value = null;
+    await excluirAluno(matricula);
 
-  carregarAlunos();
+    carregarAlunos();
 
 }
+
 function abrirModal(aluno){
 
-  alunoSelecionado.value = aluno;
+    alunoSelecionado.value = aluno;
 
-  modalAberto.value = true;
+    modalAberto.value = true;
 
 }
-onMounted(() => {
 
-  carregarAlunos();
+defineExpose({
 
-  carregarCursos();
+    carregarAlunos
+
+});
+
+onMounted(()=>{
+
+    carregarAlunos();
 
 });
 
@@ -85,118 +56,235 @@ onMounted(() => {
 
 <template>
 
-<h2>Lista de Alunos</h2>
+<div class="card">
 
-<table border="1">
+    <div class="topo">
 
-<thead>
+        <h3>
 
-<tr>
+            Alunos Cadastrados
 
-<th>Matrícula</th>
-<th>Nome</th>
-<th>Curso</th>
-<th>Ações</th>
+        </h3>
 
-</tr>
+        <span>
 
-</thead>
+            {{ alunos.length }} registros
 
-<tbody>
+        </span>
 
-<tr
-v-for="aluno in alunos"
-:key="aluno.matricula"
->
+    </div>
 
-<td>
+    <table>
 
-{{ aluno.matricula }}
+        <thead>
 
-</td>
+            <tr>
 
-<td>
+                <th>Matrícula</th>
 
-<input
-v-if="editando==aluno.matricula"
-v-model="nome"
-/>
+                <th>Nome</th>
 
-<span
-v-else
->
+                <th>Curso</th>
 
-{{ aluno.nome }}
+                <th class="acoes">
 
-</span>
+                    Ações
 
-</td>
+                </th>
 
-<td>
+            </tr>
 
-<select
-v-if="editando==aluno.matricula"
-v-model="curso_id"
->
+        </thead>
 
-<option
-v-for="curso in cursos"
-:key="curso.id"
-:value="curso.id"
->
+        <tbody>
 
-{{ curso.nome }}
+            <tr
+                v-for="aluno in alunos"
+                :key="aluno.matricula"
+            >
 
-</option>
+                <td>
 
-</select>
+                    {{ aluno.matricula }}
 
-<span
-v-else
->
+                </td>
 
-{{ aluno.curso }}
+                <td>
 
-</span>
+                    {{ aluno.nome }}
 
-</td>
+                </td>
 
-<td>
+                <td>
 
-<button
-@click="abrirModal(aluno)"
->
+                    {{ aluno.curso }}
 
-Editar
+                </td>
 
-</button>
+                <td class="acoes">
 
+                    <button
+                        class="editar"
+                        @click="abrirModal(aluno)"
+                    >
 
+                        Editar
 
-<button
-@click="excluir(aluno.matricula)"
->
+                    </button>
 
-Excluir
+                    <button
+                        class="excluir"
+                        @click="excluir(aluno.matricula)"
+                    >
 
-</button>
+                        Excluir
 
-</td>
+                    </button>
 
-</tr>
+                </td>
 
-</tbody>
+            </tr>
 
-</table>
+        </tbody>
+
+    </table>
+
+</div>
+
 <EditarAlunoModal
 
-  :aberto="modalAberto"
+    :aberto="modalAberto"
 
-  :aluno="alunoSelecionado"
+    :aluno="alunoSelecionado"
 
-  @fechar="modalAberto=false"
+    @fechar="modalAberto=false"
 
-  @atualizado="carregarAlunos"
+    @atualizado="carregarAlunos"
 
 />
+
 </template>
+
+<style scoped>
+
+.card{
+
+    background:white;
+    padding:30px;
+    border-radius:14px;
+    box-shadow:0 4px 15px rgba(0,0,0,.08);
+
+}
+
+.topo{
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+
+}
+
+.topo h3{
+
+    margin:0;
+    color:#1e3a8a;
+
+}
+
+.topo span{
+
+    background:#eff6ff;
+    color:#2563eb;
+    padding:6px 14px;
+    border-radius:30px;
+    font-size:14px;
+    font-weight:600;
+
+}
+
+table{
+
+    width:100%;
+    border-collapse:collapse;
+
+}
+
+thead{
+
+    background:#2563eb;
+    color:white;
+
+}
+
+th{
+
+    padding:15px;
+    text-align:left;
+
+}
+
+td{
+
+    padding:15px;
+    border-bottom:1px solid #ececec;
+
+}
+
+tbody tr{
+
+    transition:.2s;
+
+}
+
+tbody tr:hover{
+
+    background:#f8fbff;
+
+}
+
+.acoes{
+
+    text-align:center;
+    white-space:nowrap;
+
+}
+
+button{
+
+    border:none;
+    border-radius:8px;
+    padding:9px 14px;
+    cursor:pointer;
+    color:white;
+    font-size:14px;
+    transition:.2s;
+
+}
+
+.editar{
+
+    background:#2563eb;
+    margin-right:8px;
+
+}
+
+.editar:hover{
+
+    background:#1d4ed8;
+
+}
+
+.excluir{
+
+    background:#dc2626;
+
+}
+
+.excluir:hover{
+
+    background:#b91c1c;
+
+}
+
+</style>

@@ -3,8 +3,8 @@
 import { ref, onMounted, onUnmounted } from "vue";
 
 import {
-  listarCursos,
-  excluirCurso
+    listarCursos,
+    excluirCurso
 } from "../services/cursoService";
 
 import EditarCursoModal from "./EditarCursoModal.vue";
@@ -12,124 +12,289 @@ import EditarCursoModal from "./EditarCursoModal.vue";
 const cursos = ref([]);
 
 const modalAberto = ref(false);
+
 const cursoSelecionado = ref(null);
 
-async function carregarCursos() {
-  cursos.value = await listarCursos();
+async function carregarCursos(){
+
+    cursos.value = await listarCursos();
+
 }
 
 async function excluir(id){
 
-  if(!confirm("Deseja excluir este curso?"))
-    return;
+    if(!confirm("Deseja realmente excluir este curso?"))
+        return;
 
-  await excluirCurso(id);
+    await excluirCurso(id);
 
-  carregarCursos();
+    carregarCursos();
 
 }
 
 function abrirModal(curso){
 
-  cursoSelecionado.value = curso;
+    cursoSelecionado.value = curso;
 
-  modalAberto.value = true;
+    modalAberto.value = true;
 
 }
 
 function atualizar(){
 
-  carregarCursos();
+    carregarCursos();
 
 }
 
 onMounted(()=>{
 
-  carregarCursos();
+    carregarCursos();
 
-  window.addEventListener(
-    "cursoAtualizado",
-    atualizar
-  );
+    window.addEventListener(
+        "cursoAtualizado",
+        atualizar
+    );
 
 });
 
 onUnmounted(()=>{
 
-  window.removeEventListener(
-    "cursoAtualizado",
-    atualizar
-  );
+    window.removeEventListener(
+        "cursoAtualizado",
+        atualizar
+    );
 
 });
+defineExpose({
 
+    carregarCursos
+
+});
 </script>
 
 <template>
 
-<h2>Lista de Cursos</h2>
+<div class="card">
 
-<table border="1">
+    <div class="topo">
 
-<thead>
+        <h3>
 
-<tr>
+            Cursos Cadastrados
 
-<th>ID</th>
-<th>Nome</th>
-<th>Ações</th>
+        </h3>
 
-</tr>
+        <span>
 
-</thead>
+            {{ cursos.length }} registros
 
-<tbody>
+        </span>
 
-<tr
-v-for="curso in cursos"
-:key="curso.id"
->
+    </div>
 
-<td>{{curso.id}}</td>
+    <table>
 
-<td>{{curso.nome}}</td>
+        <thead>
 
-<td>
+            <tr>
 
-<button
-@click="abrirModal(curso)"
->
+                <th>ID</th>
 
-Editar
+                <th>Nome</th>
 
-</button>
+                <th class="acoes">
 
-<button
-@click="excluir(curso.id)"
->
+                    Ações
 
-Excluir
+                </th>
 
-</button>
+            </tr>
 
-</td>
+        </thead>
 
-</tr>
+        <tbody>
 
-</tbody>
+            <tr
+                v-for="curso in cursos"
+                :key="curso.id"
+            >
 
-</table>
+                <td>
+
+                    {{ curso.id }}
+
+                </td>
+
+                <td>
+
+                    {{ curso.nome }}
+
+                </td>
+
+                <td class="acoes">
+
+                    <button
+                        class="editar"
+                        @click="abrirModal(curso)"
+                    >
+
+                        Editar
+
+                    </button>
+
+                    <button
+                        class="excluir"
+                        @click="excluir(curso.id)"
+                    >
+
+                        Excluir
+
+                    </button>
+
+                </td>
+
+            </tr>
+
+        </tbody>
+
+    </table>
+
+</div>
 
 <EditarCursoModal
 
-:aberto="modalAberto"
+    :aberto="modalAberto"
 
-:curso="cursoSelecionado"
+    :curso="cursoSelecionado"
 
-@fechar="modalAberto=false"
+    @fechar="modalAberto=false"
 
-@atualizado="carregarCursos"
+    @atualizado="carregarCursos"
 
 />
 
 </template>
+
+<style scoped>
+
+.card{
+
+    background:white;
+    padding:30px;
+    border-radius:14px;
+    box-shadow:0 4px 15px rgba(0,0,0,.08);
+
+}
+
+.topo{
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+
+}
+
+.topo h3{
+
+    margin:0;
+    color:#1e3a8a;
+
+}
+
+.topo span{
+
+    background:#eff6ff;
+    color:#2563eb;
+    padding:6px 14px;
+    border-radius:30px;
+    font-size:14px;
+    font-weight:600;
+
+}
+
+table{
+
+    width:100%;
+    border-collapse:collapse;
+
+}
+
+thead{
+
+    background:#2563eb;
+    color:white;
+
+}
+
+th{
+
+    padding:15px;
+    text-align:left;
+
+}
+
+td{
+
+    padding:15px;
+    border-bottom:1px solid #ececec;
+
+}
+
+tbody tr{
+
+    transition:.2s;
+
+}
+
+tbody tr:hover{
+
+    background:#f8fbff;
+
+}
+
+.acoes{
+
+    text-align:center;
+    white-space:nowrap;
+
+}
+
+button{
+
+    border:none;
+    border-radius:8px;
+    padding:9px 14px;
+    cursor:pointer;
+    color:white;
+    font-size:14px;
+    transition:.2s;
+
+}
+
+.editar{
+
+    background:#2563eb;
+    margin-right:8px;
+
+}
+
+.editar:hover{
+
+    background:#1d4ed8;
+
+}
+
+.excluir{
+
+    background:#dc2626;
+
+}
+
+.excluir:hover{
+
+    background:#b91c1c;
+
+}
+
+</style>
