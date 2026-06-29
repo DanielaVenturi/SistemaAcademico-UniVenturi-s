@@ -452,15 +452,17 @@ As listas armazenam:
 
 ## Matrizes
 
-Embora o projeto trabalhe principalmente com listas de dicionários, também existe o conceito de matrizes.
+Durante a disciplina foi estudado o conceito de matrizes como estruturas bidimensionais compostas por linhas e colunas.
 
-Quando os dados são obtidos do banco através de:
+Embora o sistema utilize banco de dados SQLite para armazenar as informações de forma permanente, esse conceito continua presente durante o processamento dos dados.
+
+Quando é executado:
 
 ```python
 cursor.fetchall()
 ```
 
-o SQLite retorna uma coleção de registros.
+o SQLite retorna uma coleção de registros organizada em linhas e colunas.
 
 Exemplo:
 
@@ -474,18 +476,32 @@ Exemplo:
 
 Cada linha representa um registro.
 
-Cada coluna representa uma informação daquele registro.
+Cada coluna representa um atributo desse registro.
 
-Esse formato corresponde ao conceito de matriz bidimensional (linhas e colunas) estudado durante a disciplina.
+Essa estrutura corresponde ao conceito de matriz bidimensional estudado durante a disciplina.
 
-Posteriormente esses dados são convertidos em listas de dicionários para facilitar sua utilização pelo restante do sistema.
-
+Após a leitura desses dados, eles são convertidos para listas de dicionários, facilitando a manipulação das informações pelo restante da aplicação.
 ---
+# Requisitos da Disciplina
+
+Durante o desenvolvimento do projeto foram contemplados todos os principais conteúdos apresentados na disciplina.
+
+| Requisito | Aplicação no Projeto |
+|-----------|----------------------|
+| Listas | Cadastro e manipulação de alunos, cursos, notas e relatórios |
+| Matrizes | Estrutura tabular retornada pelo SQLite através do `fetchall()` |
+| Funções | Organização modular em diversos arquivos Python |
+| Busca Linear | Implementada em `busca.py` |
+| Ordenação (Bubble Sort) | Implementada em `ordenacao.py` |
+| Relatórios | Implementados em `relatorios.py` |
+| Modularização | Separação da aplicação em arquivos específicos |
+| Banco de Dados | SQLite |
+| Interface | Desenvolvida em Vue.js como complemento ao backend |
 
 # Considerações Finais
 
-O desenvolvimento do Sistema Acadêmico UniVenturi permitiu aplicar na prática diversos conteúdos apresentados durante a disciplina de Algoritmos e Lógica de Programação.
+O desenvolvimento do Sistema Acadêmico UniVenturi permitiu aplicar, de forma prática, os principais conceitos estudados na disciplina de Algoritmos e Lógica de Programação. Durante o projeto foram utilizados listas, matrizes (na representação tabular dos dados), funções, modularização, algoritmos de busca linear, algoritmos de ordenação (Bubble Sort), cálculo de médias, geração de relatórios e manipulação de banco de dados com SQLite.
 
-Além dos requisitos solicitados para o back-end em Python, foi desenvolvido um front-end utilizando Vue.js com o objetivo de proporcionar uma interface gráfica mais intuitiva e agradável ao usuário.
+Embora o foco da disciplina fosse o desenvolvimento do backend em Python, também foi desenvolvida uma interface em Vue.js para proporcionar uma melhor experiência ao usuário e demonstrar a integração entre frontend e backend por meio de uma API REST construída com Flask.
 
-O projeto reúne conceitos de programação, organização de código, banco de dados, algoritmos de busca, algoritmos de ordenação e geração de relatórios, resultando em um sistema acadêmico completo e funcional.
+Como resultado, foi desenvolvido um sistema acadêmico completo, organizado e funcional, capaz de gerenciar cursos, alunos e notas, além de realizar buscas, ordenações, consultas e gerar relatórios de desempenho. O projeto representa a aplicação dos conhecimentos adquiridos ao longo da disciplina e contribuiu para o desenvolvimento de boas práticas de programação, organização de código e desenvolvimento de software.
