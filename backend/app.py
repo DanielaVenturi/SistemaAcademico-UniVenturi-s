@@ -14,6 +14,7 @@ from ordenacao import (
 )
 from relatorios import calcular_media
 
+from datetime import datetime
 app = Flask(__name__)
 CORS(app)
 
@@ -410,6 +411,7 @@ def alunos_ordenados_curso():
 
     return ordenar_por_curso(alunos)
 
+
 @app.route("/notas", methods=["POST"])
 def cadastrar_notas():
 
@@ -424,42 +426,39 @@ def cadastrar_notas():
         FROM notas
         WHERE aluno_matricula = ?
 
-    """,(dados["aluno_matricula"],))
+    """, (dados["aluno_matricula"],))
 
-    existe = cursor.fetchone()
+    nota = cursor.fetchone()
 
-    if existe:
+    if nota:
 
         conn.close()
 
         return {
-            "erro":"Este aluno já possui notas."
-        },400
+            "erro": "Este aluno já possui notas."
+        }, 400
 
     cursor.execute("""
 
-        INSERT INTO notas
-        (
+        INSERT INTO notas(
+
             aluno_matricula,
             nota1,
             nota2,
-            nota3
+            nota3,
+            data
+
         )
 
-        VALUES
-        (
-            ?,
-            ?,
-            ?,
-            ?
-        )
+        VALUES(?,?,?,?,?)
 
-    """,(
+    """, (
 
         dados["aluno_matricula"],
         dados["nota1"],
         dados["nota2"],
-        dados["nota3"]
+        dados["nota3"],
+        datetime.now().strftime("%d/%m/%Y")
 
     ))
 
@@ -467,10 +466,8 @@ def cadastrar_notas():
 
     conn.close()
 
-    return{
-
-        "mensagem":"Notas cadastradas."
-
+    return {
+        "mensagem": "Notas cadastradas com sucesso."
     }
 
 @app.route("/notas", methods=["GET"])

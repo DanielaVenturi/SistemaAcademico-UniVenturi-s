@@ -26,14 +26,21 @@ def criar_tabelas():
     """)
 
     cursor.execute("""
-        CREATE TABLE IF NOT EXISTS notas(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            aluno_matricula INTEGER,
-            nota1 REAL,
-            nota2 REAL,
-            nota3 REAL,
-            FOREIGN KEY(aluno_matricula) REFERENCES alunos(matricula)
-        )
+        CREATE TABLE IF NOT EXISTS notas (
+
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+    aluno_matricula INTEGER,
+
+    nota1 REAL,
+
+    nota2 REAL,
+
+    nota3 REAL,
+
+    data TEXT
+
+)
     """)
 
     conn.commit()
