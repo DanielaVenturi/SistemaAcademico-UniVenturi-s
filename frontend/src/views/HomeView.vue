@@ -114,7 +114,7 @@ async function aplicarFiltro(){
 
 function abrirAluno(aluno){
 
-  router.push(`/aluno/${aluno.matricula}`);
+  router.push(`/notas/${aluno.matricula}`);
 
 }
 

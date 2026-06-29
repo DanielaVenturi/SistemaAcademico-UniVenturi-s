@@ -1,111 +1,33 @@
 import api from "./api";
 
-export async function listarAlunos() {
+export async function buscarNotasAluno(matricula){
 
-  const resposta = await api.get("/alunos");
+    const resposta = await api.get(
+        `/notas/aluno/${matricula}`
+    );
 
-  return resposta.data;
-
-}
-
-export async function buscarAluno(matricula) {
-
-  const resposta = await api.get(
-    `/alunos/${matricula}`
-  );
-
-  return resposta.data;
+    return resposta.data;
 
 }
 
-export async function cadastrarAluno(aluno) {
+export async function cadastrarNotas(dados){
 
-  const resposta = await api.post(
-    "/alunos",
-    aluno
-  );
+    const resposta = await api.post(
+        "/notas",
+        dados
+    );
 
-  return resposta.data;
-
-}
-
-export async function excluirAluno(matricula) {
-
-  const resposta = await api.delete(
-    `/alunos/${matricula}`
-  );
-
-  return resposta.data;
+    return resposta.data;
 
 }
 
-export async function atualizarAluno(matricula, aluno) {
+export async function atualizarNotas(id,dados){
 
-  const resposta = await api.put(
-    `/alunos/${matricula}`,
-    aluno
-  );
+    const resposta = await api.put(
+        `/notas/${id}`,
+        dados
+    );
 
-  return resposta.data;
-
-}
-
-export async function buscarPorNome(nome){
-
-  const resposta = await api.get(
-    `/alunos/busca/${nome}`
-  );
-
-  return resposta.data;
-
-}
-
-export async function buscarPorCurso(curso){
-
-  const resposta = await api.get(
-    `/alunos/curso/${curso}`
-  );
-
-  return resposta.data;
-
-}
-
-export async function buscarPorMatricula(matricula){
-
-  const resposta = await api.get(
-    `/alunos/matricula/${matricula}`
-  );
-
-  return resposta.data;
-
-}
-
-export async function ordenarPorNome(){
-
-  const resposta = await api.get(
-    "/alunos/ordenados"
-  );
-
-  return resposta.data;
-
-}
-
-export async function ordenarPorCurso(){
-
-  const resposta = await api.get(
-    "/alunos/ordenados/curso"
-  );
-
-  return resposta.data;
-
-}
-
-export async function ordenarPorMatricula(){
-
-  const resposta = await api.get(
-    "/alunos/ordenados/matricula"
-  );
-
-  return resposta.data;
+    return resposta.data;
 
 }

@@ -5,6 +5,7 @@ import CadastrosView from "../views/CadastrosView.vue";
 import ConsultasView from "../views/ConsultasView.vue";
 import NotasView from "../views/NotasView.vue";
 import CursosView from "../views/CursosView.vue";
+import AlunoDetalhesView from "../views/AlunoDetalhesView.vue";
 
 const routes = [
   {
@@ -22,6 +23,10 @@ const routes = [
   {
     path: "/notas",
     component: NotasView
+  },
+  {
+    path: "/notas/:matricula",
+    component: AlunoDetalhesView
   },
   {
     path: "/cursos",
