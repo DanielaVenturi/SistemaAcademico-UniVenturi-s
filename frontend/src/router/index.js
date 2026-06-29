@@ -6,7 +6,7 @@ import ConsultasView from "../views/ConsultasView.vue";
 import NotasView from "../views/NotasView.vue";
 import CursosView from "../views/CursosView.vue";
 import AlunoDetalhesView from "../views/AlunoDetalhesView.vue";
-
+import RelatoriosView from "../views/RelatoriosView.vue";
 const routes = [
   {
     path: "/",
@@ -28,6 +28,10 @@ const routes = [
     path: "/notas/:matricula",
     component: AlunoDetalhesView
   },
+  {
+  path: "/relatorios",
+  component: RelatoriosView
+},
   {
     path: "/cursos",
     component: CursosView

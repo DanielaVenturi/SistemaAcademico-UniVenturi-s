@@ -8,12 +8,10 @@
     <router-link to="/cadastros">
       Cadastros
     </router-link>
-
-    
-
-    <router-link to="/notas">
-      Notas
+<router-link to="/relatorios">
+      Relatórios
     </router-link>
+    
 
   </nav>
 </template>

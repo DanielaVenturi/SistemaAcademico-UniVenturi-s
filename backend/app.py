@@ -12,7 +12,10 @@ from ordenacao import (
     ordenar_por_matricula,
     ordenar_por_curso
 )
-from relatorios import calcular_media
+from relatorios import (
+    calcular_media,
+    gerar_relatorio
+)
 
 from datetime import datetime
 app = Flask(__name__)
@@ -621,5 +624,65 @@ def buscar_nota(id):
         )
 
     }
+
+@app.route("/relatorio")
+def relatorio():
+
+    conn = conectar()
+    cursor = conn.cursor()
+
+    # Lista de alunos
+    cursor.execute("""
+        SELECT
+            matricula,
+            nome
+        FROM alunos
+    """)
+
+    alunos = []
+
+    for a in cursor.fetchall():
+
+        alunos.append({
+
+            "matricula": a[0],
+
+            "nome": a[1]
+
+        })
+
+    # Lista de notas
+    cursor.execute("""
+        SELECT
+            aluno_matricula,
+            nota1,
+            nota2,
+            nota3
+        FROM notas
+    """)
+
+    notas = []
+
+    for n in cursor.fetchall():
+
+        notas.append({
+
+            "aluno_matricula": n[0],
+
+            "nota1": n[1],
+
+            "nota2": n[2],
+
+            "nota3": n[3]
+
+        })
+
+    conn.close()
+
+    return gerar_relatorio(
+        alunos,
+        notas
+    )
+
 if __name__ == "__main__":
     app.run(debug=True)

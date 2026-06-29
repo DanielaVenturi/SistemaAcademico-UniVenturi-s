@@ -4,69 +4,80 @@ def calcular_media(nota1, nota2, nota3):
 
 def gerar_relatorio(alunos, notas):
 
-    total = len(alunos)
+    relatorio_alunos = []
 
     aprovados = 0
     reprovados = 0
-
     soma_medias = 0
 
     melhor_aluno = None
     pior_aluno = None
 
-    quantidade_notas = 0
+    for aluno in alunos:
 
-    for nota in notas:
+        media = None
+        situacao = "Sem notas"
 
-        media = calcular_media(
-            nota["nota1"],
-            nota["nota2"],
-            nota["nota3"]
-        )
+        for nota in notas:
 
-        quantidade_notas += 1
-        soma_medias += media
+            if nota["aluno_matricula"] == aluno["matricula"]:
 
-        aluno = next(
+                media = calcular_media(
+                    nota["nota1"],
+                    nota["nota2"],
+                    nota["nota3"]
+                )
 
-            (
-                a for a in alunos
-                if a["matricula"] == nota["aluno_matricula"]
-            ),
+                situacao = (
+                    "Aprovado"
+                    if media >= 6
+                    else "Reprovado"
+                )
 
-            None
+                if media >= 6:
+                    aprovados += 1
+                else:
+                    reprovados += 1
 
-        )
+                soma_medias += media
 
-        if media >= 6:
-            aprovados += 1
-        else:
-            reprovados += 1
+                if melhor_aluno is None or media > melhor_aluno["media"]:
+                    melhor_aluno = {
+                        "nome": aluno["nome"],
+                        "media": media
+                    }
 
-        if aluno:
+                if pior_aluno is None or media < pior_aluno["media"]:
+                    pior_aluno = {
+                        "nome": aluno["nome"],
+                        "media": media
+                    }
 
-            dados = {
-                "nome": aluno["nome"],
-                "media": media
-            }
+                break
 
-            if melhor_aluno is None or media > melhor_aluno["media"]:
-                melhor_aluno = dados
+        relatorio_alunos.append({
 
-            if pior_aluno is None or media < pior_aluno["media"]:
-                pior_aluno = dados
+            "matricula": aluno["matricula"],
+
+            "nome": aluno["nome"],
+
+            "media": media,
+
+            "situacao": situacao
+
+        })
 
     media_geral = 0
 
-    if quantidade_notas > 0:
+    if len(notas) > 0:
         media_geral = round(
-            soma_medias / quantidade_notas,
+            soma_medias / len(notas),
             2
         )
 
     return {
 
-        "total_alunos": total,
+        "total_alunos": len(alunos),
 
         "aprovados": aprovados,
 
@@ -76,6 +87,8 @@ def gerar_relatorio(alunos, notas):
 
         "melhor_aluno": melhor_aluno,
 
-        "pior_aluno": pior_aluno
+        "pior_aluno": pior_aluno,
+
+        "alunos": relatorio_alunos
 
     }
