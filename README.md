@@ -430,43 +430,7 @@ Ao final, todas essas informações são organizadas em um único dicionário e 
 
 Dessa forma, todo o processamento dos dados acontece no backend, deixando o frontend responsável apenas por apresentar as informações ao usuário.
 
-# relatorios.py
-
-Esse arquivo é responsável por gerar todas as estatísticas do sistema.
-
-Primeiramente é utilizada a função:
-
-```python
-calcular_media()
-```
-
-Ela calcula a média das três notas do aluno.
-
-Depois é utilizada a função:
-
-```python
-gerar_relatorio()
-```
-
-Essa função percorre todos os alunos cadastrados procurando suas respectivas notas.
-
-Com essas informações o sistema calcula automaticamente:
-
-- média individual;
-- situação do aluno (Aprovado ou Reprovado);
-- quantidade de aprovados;
-- quantidade de reprovados;
-- média geral;
-- melhor aluno;
-- pior aluno;
-- ranking geral;
-- média de cada curso;
-- quantidade de alunos por curso;
-- quantidade de aprovados por curso.
-
-Ao final todas essas informações são retornadas para serem exibidas na tela de relatórios.
-
----
+----
 
 # Estruturas de Dados Utilizadas
 
