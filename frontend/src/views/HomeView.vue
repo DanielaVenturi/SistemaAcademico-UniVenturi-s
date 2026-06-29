@@ -1,166 +1,36 @@
-<template>
-
-<div class="container">
-
-<h1>🎓 Sistema Acadêmico UniVenturi</h1>
-
-<div class="cards">
-
-<div class="card">
-👨‍🎓
-<h2>Alunos</h2>
-<p>0</p>
-</div>
-
-<div class="card">
-📚
-<h2>Cursos</h2>
-<p>0</p>
-</div>
-
-<div class="card">
-📝
-<h2>Notas</h2>
-<p>0</p>
-</div>
-
-<div class="card">
-📈
-<h2>Média Geral</h2>
-<p>0</p>
-</div>
-
-</div>
-
-<hr>
-
-<h2>🔎 Buscar Alunos</h2>
-
-<div class="busca">
-
-<select v-model="tipoBusca">
-
-<option value="nome">
-Nome
-</option>
-
-<option value="matricula">
-Matrícula
-</option>
-
-<option value="curso">
-Curso
-</option>
-
-</select>
-
-<input
-v-model="pesquisa"
-placeholder="Digite sua pesquisa"
-/>
-
-<button @click="pesquisar">
-Pesquisar
-</button>
-
-</div>
-
-<h2>📋 Ordenação</h2>
-
-<div class="ordenacao">
-
-<button @click="ordenarNome">
-Nome
-</button>
-
-<button @click="ordenarMatricula">
-Matrícula
-</button>
-
-<button @click="ordenarCurso">
-Curso
-</button>
-
-</div>
-
-<table
-v-if="alunos.length"
-border="1"
->
-
-<thead>
-
-<tr>
-
-<th>Matrícula</th>
-
-<th>Nome</th>
-
-<th>Curso</th>
-
-</tr>
-
-</thead>
-
-<tbody>
-
-<tr
-v-for="aluno in alunos"
-:key="aluno.matricula"
->
-
-<td>{{ aluno.matricula }}</td>
-
-<td>{{ aluno.nome }}</td>
-
-<td>{{ aluno.curso }}</td>
-
-</tr>
-
-</tbody>
-
-</table>
-
-<p
-v-else
-class="vazio"
->
-
-Nenhum resultado encontrado.
-
-</p>
-
-</div>
-
-</template>
-
 <script setup>
 
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 
 import {
+  listarAlunos,
   buscarPorNome,
   buscarPorCurso,
+  buscarPorMatricula,
   ordenarPorNome,
-  ordenarPorCurso
+  ordenarPorCurso,
+  ordenarPorMatricula
 } from "../services/alunoService";
 
+const router = useRouter();
+
 const pesquisa = ref("");
-
 const tipoBusca = ref("nome");
-
-const ordenar = ref("nome");
 
 const alunos = ref([]);
 
+const mostrarTodos = ref(false);
+
+const filtro = ref("");
+
 async function pesquisar() {
 
+  mostrarTodos.value = false;
+
   if (pesquisa.value.trim() == "") {
-
     alunos.value = [];
-
     return;
-
   }
 
   if (tipoBusca.value == "nome") {
@@ -179,80 +49,252 @@ async function pesquisar() {
 
   }
 
+  if (tipoBusca.value == "matricula") {
+
+    try{
+
+      const aluno = await buscarPorMatricula(
+        pesquisa.value
+      );
+
+      alunos.value = [aluno];
+
+    }catch{
+
+      alunos.value=[];
+
+      alert("Aluno não encontrado.");
+
+    }
+
+  }
+
 }
 
-async function aplicarOrdenacao(){
+async function alterarTodos(){
 
-  if(ordenar.value=="nome"){
+  if(mostrarTodos.value){
 
-    alunos.value=await ordenarPorNome();
+    alunos.value = await listarAlunos();
+
+  }else{
+
+    alunos.value=[];
+
+    filtro.value="";
 
   }
 
-  if(ordenar.value=="curso"){
+}
 
-    alunos.value=await ordenarPorCurso();
+async function aplicarFiltro(){
+
+  if(filtro.value=="")
+    return;
+
+  if(filtro.value=="nomeAZ"){
+
+    alunos.value = await ordenarPorNome();
 
   }
+
+  if(filtro.value=="cursoAZ"){
+
+    alunos.value = await ordenarPorCurso();
+
+  }
+
+  if(filtro.value=="matricula"){
+
+    alunos.value = await ordenarPorMatricula();
+
+  }
+
+}
+
+function abrirAluno(aluno){
+
+  router.push(`/aluno/${aluno.matricula}`);
 
 }
 
 </script>
+
+<template>
+
+<div class="container">
+
+  <h1>🎓 Sistema Acadêmico UniVenturi</h1>
+
+  <div class="painel">
+
+    <h2>🔎 Buscar Alunos</h2>
+
+    <div class="linha">
+
+      <select v-model="tipoBusca">
+
+        <option value="nome">
+          Nome
+        </option>
+
+        <option value="curso">
+          Curso
+        </option>
+
+        <option value="matricula">
+          Matrícula
+        </option>
+
+      </select>
+
+      <input
+        v-model="pesquisa"
+        placeholder="Digite sua pesquisa"
+        @keyup.enter="pesquisar"
+      />
+
+      <button @click="pesquisar">
+        Pesquisar
+      </button>
+
+    </div>
+
+    <div class="opcoes">
+
+      <label class="todos">
+
+        <input
+          type="checkbox"
+          v-model="mostrarTodos"
+          @change="alterarTodos"
+        />
+
+        Mostrar todos
+
+      </label>
+
+      <select
+        v-if="alunos.length"
+        v-model="filtro"
+        @change="aplicarFiltro"
+        class="filtro"
+      >
+
+        <option value="">
+          Filtro
+        </option>
+
+        <option value="nomeAZ">
+          Nome (A → Z)
+        </option>
+
+        <option value="cursoAZ">
+          Curso (A → Z)
+        </option>
+
+        <option value="matricula">
+          Matrícula
+        </option>
+
+      </select>
+
+    </div>
+
+  </div>
+
+  <table
+    v-if="alunos.length"
+    class="tabela"
+  >
+
+    <thead>
+
+      <tr>
+
+        <th>Matrícula</th>
+
+        <th>Nome</th>
+
+        <th>Curso</th>
+
+      </tr>
+
+    </thead>
+
+    <tbody>
+
+      <tr
+        v-for="aluno in alunos"
+        :key="aluno.matricula"
+        class="linha-aluno"
+        @click="abrirAluno(aluno)"
+      >
+
+        <td>{{ aluno.matricula }}</td>
+
+        <td>{{ aluno.nome }}</td>
+
+        <td>{{ aluno.curso }}</td>
+
+      </tr>
+
+    </tbody>
+
+  </table>
+
+  <div
+    v-else
+    class="vazio"
+  >
+
+    Nenhum aluno para exibir.
+
+  </div>
+
+</div>
+
+</template>
+
 <style scoped>
 
 .container{
-    padding:30px;
-}
 
-.cards{
-
-    display:flex;
-
-    gap:20px;
-
-    margin:30px 0;
-
-    flex-wrap:wrap;
+    max-width:1200px;
+    margin:auto;
+    padding:35px;
 
 }
 
-.card{
+h1{
 
-    width:180px;
+    margin-bottom:30px;
+    text-align:center;
+    color:#1e3a8a;
 
-    border:1px solid #ddd;
+}
+
+.painel{
+
+    background:#fff;
 
     border-radius:12px;
 
-    padding:20px;
+    padding:25px;
 
-    text-align:center;
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
 
-    box-shadow:0 2px 6px rgba(0,0,0,.12);
+    margin-bottom:25px;
 
 }
 
-.busca{
+.linha{
 
     display:flex;
 
-    gap:10px;
+    gap:15px;
 
     align-items:center;
-
-    margin:20px 0;
-
-    flex-wrap:wrap;
-
-}
-
-.ordenacao{
-
-    display:flex;
-
-    gap:10px;
-
-    margin:20px 0;
 
     flex-wrap:wrap;
 
@@ -260,50 +302,153 @@ async function aplicarOrdenacao(){
 
 input{
 
-    padding:10px;
+    flex:1;
 
-    width:280px;
+    min-width:260px;
+
+    padding:12px;
+
+    border:1px solid #ccc;
+
+    border-radius:8px;
+
+    font-size:15px;
 
 }
 
 select{
 
-    padding:10px;
+    padding:12px;
+
+    border:1px solid #ccc;
+
+    border-radius:8px;
+
+    font-size:15px;
 
 }
 
 button{
 
-    padding:10px 18px;
+    padding:12px 18px;
+
+    background:#2563eb;
+
+    color:white;
+
+    border:none;
+
+    border-radius:8px;
 
     cursor:pointer;
 
+    transition:.2s;
+
 }
 
-table{
+button:hover{
+
+    background:#1d4ed8;
+
+}
+
+.opcoes{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-top:18px;
+
+    flex-wrap:wrap;
+
+    gap:15px;
+
+}
+
+.todos{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    font-size:15px;
+
+}
+
+.filtro{
+
+    width:190px;
+
+}
+
+.tabela{
 
     width:100%;
 
-    margin-top:25px;
-
     border-collapse:collapse;
+
+    background:white;
+
+    border-radius:10px;
+
+    overflow:hidden;
+
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
 
 }
 
-th,
+thead{
+
+    background:#2563eb;
+
+    color:white;
+
+}
+
+th{
+
+    padding:15px;
+
+}
+
 td{
 
-    padding:12px;
+    padding:15px;
 
-    text-align:left;
+    border-bottom:1px solid #eee;
+
+}
+
+.linha-aluno{
+
+    cursor:pointer;
+
+    transition:.2s;
+
+}
+
+.linha-aluno:hover{
+
+    background:#eff6ff;
+
+    transform:scale(1.003);
 
 }
 
 .vazio{
 
-    margin-top:20px;
+    margin-top:30px;
 
-    color:#666;
+    text-align:center;
+
+    color:#777;
+
+    font-size:16px;
 
 }
 
