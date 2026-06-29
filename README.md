@@ -62,13 +62,10 @@ cd backend
 
 Ative o ambiente virtual.
 ```powershell
+
 pip install flask flask-cors
 
 python -m venv venv
-```
-```powershell
-
-
 
 .\venv\Scripts\Activate.ps1
 ```
